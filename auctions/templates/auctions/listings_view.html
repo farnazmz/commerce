@@ -1,0 +1,22 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<h1><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h1>
+<p>{{listings.title}}</p>
+<p>{{listings.image}}</p>
+<p>{{listings.price}}</p>
+<p>{{listings.description}}</p>
+<p>{{listings.category}}</p>
+<p>{{listings.seller}}</p>
+<p>{{listings.creation_date}}</p>
+<p>{{listings.active}}</p>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <a href="{% url 'index' %}">All Listings</a>
+   
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+
+<h3>CategoriesPage</h3>
+    
+
+<form action="{% url 'category_page' %}" method="post" >
+    {% csrf_token %}
+    {{form}}       
+    <input class="btn btn-primary" type="submit" value="submit">
+</form>
+
+
+  
+   
+{% endblock %}
+   

@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+   
+
+
+<h3>{{category_name|safe}}</h3>
+
+{% for listing in listings %}
+
+
+<ul>
+    <li><a href="{% url 'category_page'  %}"> Title: {{listing.title|safe}} </a></li>
+    <li><a href="{% url 'category_page'  %}"> Price: {{listing.price|safe}}</a></li>
+    <li><a href="{% url 'category_page'  %}"> Title: {{listing.category|safe}} </a></li>
+</ul>
+
+{% endfor %}
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+
+
+  
+   
+{% endblock %}

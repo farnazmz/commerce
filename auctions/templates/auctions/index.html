@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+   
+
+    {% for listing in listings %}
+
+  <ul>
+    <h1><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h1>
+    <li><a href="{% url 'index'  %}"> Title: {{ listing.title|safe }}</a></li>
+    <li><a href="{% url 'index'  %}"> Image_Url: {{ listing.image }}</a></li>
+    <li><a href="{% url 'index'  %}"> Price: {{ listing.price }}</a></li>
+    <li><a href="{% url 'index'  %}"> Description: {{ listing.description }}</a></li>
+    <li><a href="{% url 'index'  %}"> Category: {{ listing.category }}</a></li>
+    <li><a href="{% url 'index'  %}"> Seller: {{ listing.seller|safe }}</a></li>
+    <li><a href="{% url 'index' %}">Date: {{listing.creation_date}}</a></li>
+    <li><a href="{% url 'index' %}">Active: {{listing.active}}</a></li>
+
+    
+</ul>
+    {% endfor %}
+    
+    TODO
+    
+    <a href="listings">list here</a>
+
+{% endblock %}
