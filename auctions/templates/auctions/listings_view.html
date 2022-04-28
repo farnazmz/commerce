@@ -2,21 +2,37 @@
 
 {% block body %}
 
-<h1><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h1>
-<p>{{listings.title}}</p>
-<p>{{listings.image}}</p>
-<p>{{listings.price}}</p>
-<p>{{listings.description}}</p>
-<p>{{listings.category}}</p>
-<p>{{listings.seller}}</p>
-<p>{{listings.creation_date}}</p>
-<p>{{listings.active}}</p>
 
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
+<h3>make a bid here</h3>
 
-    <a href="{% url 'index' %}">All Listings</a>
+
+
+
+<h3>Highest bid</h3>
+
+
+<p>listings.id:  {{listing.id}}</p>
+<p>title : {{listing.title}}</p>
+<p>{{listing.price}}</p>
+<p>{{listing.description}}</p>
+<p>{{listing.category}}</p>
+<p>seller: {{listing.seller}}</p>
+<p>created on: {{listing.creation_date}}</p>
+<p>is active: {{listing.active}}</p>
+image: <img src="{{ listings.image.url }}"/>
+
+
+
+{% if message %}
+    <div>{{ message }}</div>
+{% endif %}
+<a href="{% url 'index' %}">All Listings</a>
    
+
+
+
+
+
+
 
 {% endblock %}

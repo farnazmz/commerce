@@ -1,3 +1,4 @@
+from ast import arg
 from asyncio.constants import LOG_THRESHOLD_FOR_CONNLOST_WRITES
 from cProfile import label
 from email import message
@@ -8,6 +9,7 @@ from telnetlib import LOGOUT
 from tkinter import Widget
 from turtle import title
 from unicodedata import category
+from xml.etree.ElementTree import Comment
 from attr import attr
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -15,23 +17,21 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, path
-from django import forms
 from django.db import models
-from requests import request
-from .models import User
-from .models import Listings
-from .forms import ListingsForm, CategoriesForm
-
-
-
+from sqlalchemy import false
+from .models import Comment, User, Listing
+from .models import Bid, Auction
+from requests import request, session
+from django import forms
+from .forms import AuctionForm, BidForm, CommentForm, ListingForm, CategoryForm
 from xml.dom.minidom import Attr
 from tkinter.tix import Form
 import datetime
-from .forms import  CategoriesForm, ListingsForm
 from auctions import forms
   
+
 def index(request):  
-    listings = Listings.objects.all()
+    listings = Listing.objects.all()
     for listing in listings:
         return render(request, "auctions/index.html", {
                 "listing": listing,
@@ -55,7 +55,6 @@ def login_view(request):
             })
     else:
         return render(request, "auctions/login.html")
-
 
 
 def logout_view(request):
@@ -89,9 +88,37 @@ def register(request):
 
 
 login_required()
+def categories(request):   
+    if request.method == "GET":
+        return render(request, "auctions/categories.html", {                      
+                "form":CategoryForm(),     
+                })
+    else:
+        return render(request, "auctions/category_page.html")
+
+
+login_required()
+def category_page(request):
+    form = CategoryForm(request.POST)      
+    if form.is_valid():
+        category_name = form.cleaned_data["category"]
+        listings = Listing.objects.filter(category=category_name)    
+        return render(request, "auctions/category_page.html", {
+                    "listings":listings,                                   
+                    "category_name":category_name,
+                    "form":form                                   
+            })          
+    else:        
+        return render(request, "auctions/categories.html", {                      
+                "form":CategoryForm(),   
+                "bid_form":BidForm()  
+                })     
+
+
+login_required()
 def listings(request):
     if request.method == "POST":
-        form = ListingsForm(request.POST)
+        form = ListingForm(request.POST, request.FILES)
         if form.is_valid():
             title = form.cleaned_data["title"]
             category = form.cleaned_data["category"]
@@ -99,7 +126,7 @@ def listings(request):
             description = form.cleaned_data["description"]
             image = form.cleaned_data["image"]
             acitve =  form.cleaned_data["active"]                  
-            listing = Listings(
+            listing = Listing(
                 seller=request.user,
                 title=title,
                 category=category,
@@ -117,46 +144,13 @@ def listings(request):
             })
     else:
         return render(request, "auctions/listings.html", {
-            "form":ListingsForm()
+            "form":ListingForm()
         })
+
 
 login_required()
 def listings_view(request, listing_id):
-    listings = Listings.objects.get(id=listing_id)
-    
-    return render(request, "auctions/listings_view.html", {
-            "listings":listings,          
+    listing = Listing.objects.get(id=listing_id)              
+    return render(request, "auctions/listings_view.html", { 
+        "listing":listing,       
         })
-
-login_required()
-def categories(request):
-    
-    if request.method == "GET":
-        return render(request, "auctions/categories.html", {                      
-                "form":CategoriesForm(),
-                  "a": "a"       
-                })
-    else:
-        return render(request, "auctions/category_page.html")
-
-
-login_required()
-def category_page(request):
-    form = CategoriesForm(request.POST)      
-    if form.is_valid():
-        category_name = form.cleaned_data["category"]
-        listings = Listings.objects.filter(category=category_name)
-     
-        return render(request, "auctions/category_page.html", {
-                    "listings":listings,                                   
-                    "category_name":category_name,
-                    "form":form                                   
-            })
-           
-    else:        
-        return render(request, "auctions/categories.html", {                      
-                "form":CategoriesForm(),   
-                "b":"b"  
-                })     
- 
-    

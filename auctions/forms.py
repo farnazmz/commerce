@@ -4,17 +4,14 @@ from sre_parse import CATEGORIES
 from typing import Any
 from unicodedata import category
 from django import forms
-from .models import User, Listings
 
-class ListingsForm(forms.Form):
+
+class ListingForm(forms.Form):
+
     title = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Title"}))
-
-    image = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Image_URL"}))
-
+    image = forms.ImageField(max_length=200)
     price = forms.FloatField(label="", widget=forms.NumberInput())
-
     description = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Description"}))  
-
     CATEGORIES= [
     ('clothing, shoes', 'Clothing, Shoes'),
     ('jewelry, watches', 'Jewelry, Watches'),
@@ -32,7 +29,7 @@ class ListingsForm(forms.Form):
     active = forms.BooleanField(required=False)
 
 
-class CategoriesForm(forms.Form):
+class CategoryForm(forms.Form):
     CATEGORIES= [
     ('clothing, shoes', 'Clothing, Shoes'),
     ('jewelry, watches', 'Jewelry, Watches'),
@@ -50,6 +47,16 @@ class CategoriesForm(forms.Form):
     active = forms.BooleanField(required=False)
     
    
+class AuctionForm(forms.Form):
+    on_watch_list = forms.BooleanField(required=False)
+
+
+class BidForm(forms.Form):
+    bid_amount = forms.FloatField(required=False)
+
+class CommentForm(forms.Form):
+    comment = forms.CharField(max_length=3000, required=False)
+    
 
  
 
