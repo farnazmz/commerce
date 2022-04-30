@@ -51,30 +51,31 @@ class Listing(models.Model):
             return reverse('listings_view', args=[str(self.id)])
 
 class Auction(models.Model):
-    listing_id = models.ForeignKey(Listing, on_delete=models.CASCADE, null=True)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, null=True)
     number_of_bids = models.IntegerField(null=True)
-    time_starting: models.DateTimeField()
-    time_ending = models.DateTimeField()
+    time_starting: models.DateTimeField(null=False)
+    time_ending = models.DateTimeField(null=False)
    
 
 class Watchlist(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    auction_id = models.ForeignKey(Auction, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, null=True)
+    
   
     
 class Bid(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    auction_id = models.ForeignKey(Auction, on_delete=models.CASCADE, null=True) 
-    slug = models.SlugField(unique=True, null=True)      
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, null=True) 
+        
     bid_time = models.DateTimeField()
+    
   
                 
-class Comment(models.Model): 
-    auction_id = models.ForeignKey(Auction, on_delete=models.CASCADE, null=True)  
-    slug = models.SlugField(unique=True, null=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)  
+class Comment(models.Model):  
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  
     comment = models.TextField(null=True) 
     time_sent = models.DateTimeField(null=True) 
+   
     
 
 
