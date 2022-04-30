@@ -2,15 +2,6 @@
 
 {% block body %}
 
-
-<h3>make a bid here</h3>
-
-
-
-
-<h3>Highest bid</h3>
-
-
 <p>listings.id:  {{listing.id}}</p>
 <p>title : {{listing.title}}</p>
 <p>{{listing.price}}</p>
@@ -21,8 +12,6 @@
 <p>is active: {{listing.active}}</p>
 image: <img src="{{ listings.image.url }}"/>
 
-
-
 {% if message %}
     <div>{{ message }}</div>
 {% endif %}
@@ -30,9 +19,29 @@ image: <img src="{{ listings.image.url }}"/>
    
 
 
+<h4> Enter bid amount: </h4>
+<form action="{% url 'bid' listing %}" method="POST">
+    {% csrf_token %}
+    {{bid_form}}
+    <input class="btn btn-primary" type="submit" value="bid here">
+</form>
 
 
+<h4> Add a comment: </h4>
+<form action="{% url 'bid' listing %}" method="POST">
+    {% csrf_token %}
+    {{comment_form}}
+    <input class="btn btn-primary" type="submit" value="comment">
+</form>
 
 
+<ul>
+    <li>highest_bid{{bid_amount}} </li>
 
+</ul>
+
+<ul>
+    
+    <li>comment{{comment|safe}}</li>
+</ul>
 {% endblock %}

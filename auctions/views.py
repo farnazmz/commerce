@@ -7,6 +7,7 @@ from multiprocessing.sharedctypes import Value
 from sre_parse import CATEGORIES
 from telnetlib import LOGOUT
 from tkinter import Widget
+from tokenize import cookie_re
 from turtle import title
 from unicodedata import category
 from xml.etree.ElementTree import Comment
@@ -18,12 +19,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, path
 from django.db import models
-from sqlalchemy import false
-from .models import Comment, User, Listing
-from .models import Bid, Auction
+from sqlalchemy import false, null
+from .models import User, Listing
+from .models import Bid, Comment
 from requests import request, session
 from django import forms
-from .forms import AuctionForm, BidForm, CommentForm, ListingForm, CategoryForm
+from .forms import BidForm, CommentForm, ListingForm, CategoryForm
 from xml.dom.minidom import Attr
 from tkinter.tix import Form
 import datetime
@@ -147,10 +148,46 @@ def listings(request):
             "form":ListingForm()
         })
 
-
 login_required()
 def listings_view(request, listing_id):
-    listing = Listing.objects.get(id=listing_id)              
-    return render(request, "auctions/listings_view.html", { 
-        "listing":listing,       
-        })
+    if request.method == "POST":
+        listing = Listing.objects.get(id=listing_id) 
+        return redirect("bid", args="listing")
+    else:
+        listing = Listing.objects.get(id=listing_id)
+        return render(request, "auctions/listings_view.html", {
+                "listing":listing,
+                "bid_form": BidForm(),
+                "comment_form": CommentForm()
+            })
+
+login_required()
+def bid(request, listing_id):
+    if request.method == "POST":
+        listing = Listing.objects.get(id=listing_id)
+
+        bid_form = BidForm(request.POST)
+        if bid_form.is_valid():
+            bid_amount = bid_form.cleaned_data["bid_amount"]
+        else:
+            bid_amount = null 
+
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.cleaned_data["comment"]
+        else:
+            comment = null
+                        
+        return render(request, "auctions/listings_view.html", {
+                "bid_form":BidForm,
+                "comment_form":CommentForm,
+                "bid_form":bid_form,
+                "comment_form":comment_form,
+                "listing":listing,
+                "comment":comment,
+                "bid_amount":bid_amount
+              
+            })
+    else:
+        return render(request, "auctions/listings_view.html")
+

@@ -45,17 +45,13 @@ class CategoryForm(forms.Form):
     ] 
     category = forms.CharField(label="", widget=forms.Select(choices=CATEGORIES))
     active = forms.BooleanField(required=False)
-    
-   
-class AuctionForm(forms.Form):
-    on_watch_list = forms.BooleanField(required=False)
 
 
 class BidForm(forms.Form):
-    bid_amount = forms.FloatField(required=False)
+    bid_amount = forms.FloatField(label="", widget=forms.NumberInput())
 
 class CommentForm(forms.Form):
-    comment = forms.CharField(max_length=3000, required=False)
+    comment = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Comment"}))
     
 
  
