@@ -1,7 +1,7 @@
 from enum import auto
 from pyexpat import model
 import re
-from attr import NOTHING
+
 from django.core.management import call_command
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -43,39 +43,61 @@ class Listing(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing")
     category = models.CharField(max_length=50, choices=CATEGORIES)
     active = models.BooleanField(default=True) 
-      
     
+
     def __str__(self):
-            return f"{self.id}"        
+        return f"{self.id}"
+                    
+    def listingprint(self):
+        return f"listing_id: {self.id} / title: {self.title}/ seller: {self.seller}/  price: {self.price}"
+
+   
+    
     def get_absolute_url(self): 
             return reverse('listings_view', args=[str(self.id)])
 
-class Auction(models.Model):
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, null=True)
-    number_of_bids = models.IntegerField(null=True)
-    time_starting: models.DateTimeField(null=False)
-    time_ending = models.DateTimeField(null=False)
-   
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, null=True)
-    
-  
-    
-class Bid(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    auction = models.ForeignKey(Auction, on_delete=models.CASCADE, null=True) 
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.id}"
         
-    bid_time = models.DateTimeField()
-    
+    def watchprint(self):
+        return f"watchlist.user: {self.user}/ auction: {self.listing}" 
   
-                
+class Bid(models.Model):
+ 
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)        
+    bid_time = models.DateTimeField()
+    bid_amount = models.FloatField(null=True)
+    def __str__(self):
+        return f"{self.listing}" 
+
+    def max_bid(self):
+        highest = self.bid_amount.all()
+        h_bids = [bid.bid_amount for bid in highest]
+        if len(h_bids) > 0:
+            h = max(h_bids)
+            listing = Listing.objects.get(listing=listing)
+            h_price = [l.price for l in listing]
+            if float(h) > float(h_price):
+                return max(h_bids) 
+        else:
+            return float(0)
+    def __str__(self):
+        return f"{self.listing}" 
+            
+            
+
+
 class Comment(models.Model):  
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)  
     comment = models.TextField(null=True) 
     time_sent = models.DateTimeField(null=True) 
+    def __str__(self):
+            return f"{self.id}" 
+    def commentprint(self):
+        return f"bid.id: {self.id}/ bid_amount: {self.comment}/  auction{self.listing}" 
    
-    
-
-

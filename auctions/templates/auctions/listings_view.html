@@ -12,12 +12,9 @@
 <p>is active: {{listing.active}}</p>
 image: <img src="{{ listings.image.url }}"/>
 
-{% if message %}
-    <div>{{ message }}</div>
-{% endif %}
+
 <a href="{% url 'index' %}">All Listings</a>
    
-
 
 <h4> Enter bid amount: </h4>
 <form action="{% url 'bid' listing %}" method="POST">
@@ -35,13 +32,18 @@ image: <img src="{{ listings.image.url }}"/>
 </form>
 
 
+
+{% if message %}
+    <div>{{ message }}</div>
+{% endif %}
+
+{{bid_amount}}
+ 
 <ul>
-    <li>highest_bid{{bid_amount}} </li>
+    <li>listing bid{{listing.price}} </li>
+  
 
 </ul>
 
-<ul>
-    
-    <li>comment{{comment|safe}}</li>
-</ul>
+
 {% endblock %}
