@@ -1,7 +1,9 @@
+
+from random import expovariate
+import django
 from enum import auto
 from pyexpat import model
 import re
-
 from django.core.management import call_command
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -15,7 +17,7 @@ from typing import Any
 from unicodedata import category
 from click import password_option
 from django.urls import reverse
-from requests import session
+from requests import request, session
 from sqlalchemy import false, true
 
 class User(AbstractUser):
@@ -43,28 +45,44 @@ class Listing(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing")
     category = models.CharField(max_length=50, choices=CATEGORIES)
     active = models.BooleanField(default=True) 
-    
+    on_watchlist = models.ManyToManyField(User,blank=True, related_name="on_watchlist")    
 
     def __str__(self):
         return f"{self.id}"
-                    
-    def listingprint(self):
-        return f"listing_id: {self.id} / title: {self.title}/ seller: {self.seller}/  price: {self.price}"
-
-   
     
     def get_absolute_url(self): 
             return reverse('listings_view', args=[str(self.id)])
 
+    def on_watchlist(self, user):
+        return user.on_watchlist.filter(pk=self.pk).exists
 
 class Watchlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="on_watchlist", blank=True, null=True)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watch_list")
+    is_on_watchlist = models.BooleanField(default=False)
+    
     def __str__(self):
-        return f"{self.id}"
-        
-    def watchprint(self):
-        return f"watchlist.user: {self.user}/ auction: {self.listing}" 
+        return f"user:{self.user}/  listing:{self.listing}"
+     
+    def on_watchlist(self, user):
+        user = request.user
+        return user.on_watchlist.filter(pk=self.pk).exists()
+
+    def watch_list(self):
+        user = request.user
+        listings = Listing.objects.filter(user=request.user, on_watchlist=True)
+        watch_list = [w.listing for w in listings]
+        return watch_list   
+
+    def add_watchlist(self, listing_id):
+        user = request.user
+        listing = Listing.objects.get(id=listing_id)
+        user.on_watchlist.add(listing)
+
+    def remove_watchlist(self, listing_id):
+        user = request.user
+        listing = Listing.objects.get(id=listing_id)
+        listing.on_watchlist.remove(user)      
   
 class Bid(models.Model):
  
@@ -85,19 +103,14 @@ class Bid(models.Model):
                 return max(h_bids) 
         else:
             return float(0)
-    def __str__(self):
-        return f"{self.listing}" 
-            
-            
-
-
+           
+    
 class Comment(models.Model):  
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE)  
     comment = models.TextField(null=True) 
     time_sent = models.DateTimeField(null=True) 
+
     def __str__(self):
-            return f"{self.id}" 
-    def commentprint(self):
-        return f"bid.id: {self.id}/ bid_amount: {self.comment}/  auction{self.listing}" 
+            return f"{self.comment}" 
    

@@ -1,3 +1,5 @@
+from typing import Any
+from django import *
 from ast import arg
 from asyncio.constants import LOG_THRESHOLD_FOR_CONNLOST_WRITES
 from cProfile import label
@@ -9,27 +11,22 @@ from telnetlib import LOGOUT
 from tkinter import Widget
 from attr import attr
 from turtle import title
-from unicodedata import category
+from unicodedata import category, name
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, path
-from django.db import models
-from auctions.models import User
-from .models import User, Listing
-from sqlalchemy import false, null
+from sqlalchemy import false, null, true
 from requests import request, session
-from django import forms
-from .forms import BidForm, CommentForm, ListingForm, CategoryForm
 from xml.dom.minidom import Attr
 from tkinter.tix import Form
 import datetime
-from auctions import forms
 from xml.etree.ElementTree import Comment
 from tokenize import cookie_re
-  
+from .forms import WatchlistForm, BidForm, CommentForm, ListingForm, CategoryForm
+from .models import User, Listing, Watchlist, Bid
 
 def index(request):  
     listings = Listing.objects.all()
@@ -37,8 +34,7 @@ def index(request):
         return render(request, "auctions/index.html", {
                 "listing": listing,
                 "listings": listings
-            })    
-
+            })  
 
 def login_view(request):
     if request.method == "POST":
@@ -57,11 +53,9 @@ def login_view(request):
     else:
         return render(request, "auctions/login.html")
 
-
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
-
 
 def register(request):
     if request.method == "POST":
@@ -87,7 +81,6 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-
 login_required()
 def categories(request):   
     if request.method == "GET":
@@ -96,7 +89,6 @@ def categories(request):
                 })
     else:
         return render(request, "auctions/category_page.html")
-
 
 login_required()
 def category_page(request):
@@ -114,7 +106,6 @@ def category_page(request):
                 "form":CategoryForm(),   
                 "bid_form":BidForm()  
                 })     
-
 
 login_required()
 def listings(request):
@@ -150,16 +141,50 @@ def listings(request):
 
 login_required()
 def listings_view(request, listing_id):
-    if request.method == "POST":
-        listing = Listing.objects.get(id=listing_id) 
-        return redirect("bid", args="listing")
-    else:
-        listing = Listing.objects.get(id=listing_id)       
+    listing = Listing.objects.get(id=listing_id)
+    user = request.user  
+    on_watchlist = user.on_watchlist.all()
+    for a in on_watchlist:
+        a = a.id
         return render(request, "auctions/listings_view.html", {
                 "listing":listing,
                 "bid_form": BidForm(),
-                "comment_form": CommentForm()             
+                "comment_form": CommentForm(),
+                "watchlist_form": WatchlistForm(),
+                "comments":"comments",
+                "on_watchlist":on_watchlist,
+                "message":"message",
+                "user":request.user,
+                "a":a
             })
+
+login_required()
+def watchlist(request, listing_id):
+    if request.method == "POST":
+        user = request.user
+        listing = Listing.objects.get(id=listing_id)
+        watchlist_form = WatchlistForm(request.POST)
+        if watchlist_form.is_valid():
+            onwatchlist = watchlist_form.cleaned_data["onwatchlist"]
+            if onwatchlist == False:
+                if listing.on_watchlist(user):
+                    listing.remove_watchlist(user)
+                    "message" == "item removed from your watchlist"
+            else:
+                if not listing.on_watchlist:
+                    listing.add_watchlist(user)
+                    "message" == "item added to your watchlist"
+            return redirect(("listings_view"), listing=listing)
+    else:
+        user = request.user
+        user_id = user.id
+        watch_list = User.objects.filter(pk=user_id,on_watchlist=True)
+        return render(request, "auctions/watchlist.html", {
+            "watch_list":watch_list,
+            "user":user,
+            "user_id":user_id
+         
+        })
 
 login_required()
 def bid(request, listing_id):

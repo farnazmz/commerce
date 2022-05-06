@@ -11,6 +11,15 @@
 <p>created on: {{listing.creation_date}}</p>
 <p>is active: {{listing.active}}</p>
 image: <img src="{{ listings.image.url }}"/>
+<img src="{{ listing.image.url }}"/>
+
+
+<h4> Add to Watchlist </h4>
+<form action="{% url 'watchlist' listing %}" method="POST">
+    {% csrf_token %}
+    {{watchlist_form}}
+    <input type="submit" class="btn btn-primary" value="Add/Remove to Watchlist">
+
 
 
 <a href="{% url 'index' %}">All Listings</a>
@@ -31,7 +40,9 @@ image: <img src="{{ listings.image.url }}"/>
     <input class="btn btn-primary" type="submit" value="comment">
 </form>
 
-
+{% for a in on_watchlist %}
+<li>{{a}}</li>
+{% endfor %}
 
 {% if message %}
     <div>{{ message }}</div>

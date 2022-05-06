@@ -1,5 +1,6 @@
 from cProfile import label
 from email.policy import default
+from random import choices
 from sre_parse import CATEGORIES
 from typing import Any
 from unicodedata import category
@@ -46,15 +47,18 @@ class CategoryForm(forms.Form):
     category = forms.CharField(label="", widget=forms.Select(choices=CATEGORIES))
     active = forms.BooleanField(required=False)
 
+class WatchlistForm(forms.Form):
+    choice = [
+        ('True', 'Yes'),
+        ('False', 'No'),
+    ]
+    onwatchlist = forms.CharField(label="", widget=forms.Select(choices=choice), required=False)
 
 class BidForm(forms.Form):
-    bid_amount = forms.FloatField(label="", widget=forms.NumberInput())
+    bid_amount = forms.FloatField(label="", widget=forms.NumberInput(), required=False)
+
 
 class CommentForm(forms.Form):
-    comment = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Comment"}))
+    comment = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Comment"}), required=False)
     
-
- 
-
-
 
