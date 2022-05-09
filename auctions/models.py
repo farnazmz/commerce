@@ -45,47 +45,25 @@ class Listing(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing")
     category = models.CharField(max_length=50, choices=CATEGORIES)
     active = models.BooleanField(default=True) 
-    on_watchlist = models.ManyToManyField(User,blank=True, related_name="on_watchlist")    
-
+   
+     
     def __str__(self):
         return f"{self.id}"
     
     def get_absolute_url(self): 
-            return reverse('listings_view', args=[str(self.id)])
-
-    def on_watchlist(self, user):
-        return user.on_watchlist.filter(pk=self.pk).exists
+        return reverse('listings_view', args=[str(self.id)])
 
 class Watchlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="on_watchlist", blank=True, null=True)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watch_list")
-    is_on_watchlist = models.BooleanField(default=False)
-    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings_on_watchlist", blank=True, null=True)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="listings_on_watchlist", blank=True, null=True)
+    is_on_watchlist = models.BooleanField(blank=True, null=True)
+
     def __str__(self):
-        return f"user:{self.user}/  listing:{self.listing}"
+        return f"{self.user} watching {self.listing}"
      
-    def on_watchlist(self, user):
-        user = request.user
-        return user.on_watchlist.filter(pk=self.pk).exists()
-
-    def watch_list(self):
-        user = request.user
-        listings = Listing.objects.filter(user=request.user, on_watchlist=True)
-        watch_list = [w.listing for w in listings]
-        return watch_list   
-
-    def add_watchlist(self, listing_id):
-        user = request.user
-        listing = Listing.objects.get(id=listing_id)
-        user.on_watchlist.add(listing)
-
-    def remove_watchlist(self, listing_id):
-        user = request.user
-        listing = Listing.objects.get(id=listing_id)
-        listing.on_watchlist.remove(user)      
+           
   
 class Bid(models.Model):
- 
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE)        
     bid_time = models.DateTimeField()
     bid_amount = models.FloatField(null=True)

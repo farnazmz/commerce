@@ -1,8 +1,11 @@
 from cProfile import label
 from email.policy import default
 from random import choices
+from select import select
 from sre_parse import CATEGORIES
+from tkinter.tix import Select
 from typing import Any
+
 from unicodedata import category
 from django import forms
 
@@ -48,11 +51,13 @@ class CategoryForm(forms.Form):
     active = forms.BooleanField(required=False)
 
 class WatchlistForm(forms.Form):
-    choice = [
-        ('True', 'Yes'),
-        ('False', 'No'),
-    ]
-    onwatchlist = forms.CharField(label="", widget=forms.Select(choices=choice), required=False)
+    
+   
+    change_watch = forms.BooleanField (required=False, widget=forms.Select(choices=[
+        ('true', 'Add to Watchlist'),
+        ('false', 'Remove from Watchlist')
+    ]))
+
 
 class BidForm(forms.Form):
     bid_amount = forms.FloatField(label="", widget=forms.NumberInput(), required=False)

@@ -4,29 +4,32 @@
 
 <p>listings.id:  {{listing.id}}</p>
 <p>title : {{listing.title}}</p>
-<p>{{listing.price}}</p>
-<p>{{listing.description}}</p>
-<p>{{listing.category}}</p>
-<p>seller: {{listing.seller}}</p>
+<p>price:  {{listing.price}}</p>
+<p>description:  {{listing.description}}</p>
+<p>category:  {{listing.category}}</p>
+<p>seller:  {{listing.seller}}</p>
 <p>created on: {{listing.creation_date}}</p>
-<p>is active: {{listing.active}}</p>
+<p>active: {{listing.active}}</p>
 image: <img src="{{ listings.image.url }}"/>
 <img src="{{ listing.image.url }}"/>
 
 
+
 <h4> Add to Watchlist </h4>
-<form action="{% url 'watchlist' listing %}" method="POST">
+<form action="{% url 'change_watchlist' listing_id %}" method="POST">
     {% csrf_token %}
-    {{watchlist_form}}
-    <input type="submit" class="btn btn-primary" value="Add/Remove to Watchlist">
+    {{watchlist_form.as_p}}
+    <input type="submit" class="btn btn-primary"  value="Add/Remove Watchlist">
+</form>
 
-
-
-<a href="{% url 'index' %}">All Listings</a>
+{% for w in watchers %}
+<li>{{w.user}}</li>
+<li>{{w.user.username}}</li>
+{% endfor %}
    
 
 <h4> Enter bid amount: </h4>
-<form action="{% url 'bid' listing %}" method="POST">
+<form action="{% url 'bid' listing_id %}" method="POST">
     {% csrf_token %}
     {{bid_form}}
     <input class="btn btn-primary" type="submit" value="bid here">
@@ -34,27 +37,24 @@ image: <img src="{{ listings.image.url }}"/>
 
 
 <h4> Add a comment: </h4>
-<form action="{% url 'bid' listing %}" method="POST">
+<form action="{% url 'bid' listing_id %}" method="POST">
     {% csrf_token %}
     {{comment_form}}
     <input class="btn btn-primary" type="submit" value="comment">
 </form>
 
-{% for a in on_watchlist %}
-<li>{{a}}</li>
+<ul><h3><a >wachers</a></h3>
+{% for w in  watchers %}
+    
+<li>w.user: {{w.user|safe}}</li>
+<li>w.id: {{w.id|safe}}</li>
+<li>w.username{{w.username|safe}}</li>
+<li>{{w.message|safe}}</li>
 {% endfor %}
-
-{% if message %}
-    <div>{{ message }}</div>
-{% endif %}
-
-{{bid_amount}}
- 
-<ul>
-    <li>listing bid{{listing.price}} </li>
-  
-
 </ul>
+
+
+<a href="{% url 'index' %}">All Listings</a>
 
 
 {% endblock %}
