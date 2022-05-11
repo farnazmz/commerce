@@ -1,20 +1,15 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-
-
-for a in listings_on_watchlist:
-
 {% for a in listings_on_watchlist %}
-<li><a href="{{a.listing.get_absolute_url}}">{{a.listing.title}}</a></li>
+<ul>
+    <li><a href="{{a.listing.get_absolute_url}}">{{a.listing.title|safe}}</a></li>
+    <li>seller: {{a.listing.seller|safe}}</li>
+    <li>price: {{a.listing.price|safe}}</li>
+</ul>
+ {% endfor %}
 
-{% endfor %}
-///
-for b in listing_on_watch_list
-{% for b in listings_on_watchlist %}
-<li>listing_id:  {{b.listing}}</li>
-{% endfor %}
-///
 
-current user:  {{user}}
+
+
 {% endblock %}

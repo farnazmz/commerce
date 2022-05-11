@@ -16,12 +16,18 @@ urlpatterns = [
     path("category_page", views.category_page, name="category_page"),
  
     path("listings_view", views.listings_view, name="listings_view"),
+
     path("listings_view/<str:listing_id>", views.listings_view, name="listings_view"),
-
+    path("listings_view/<str:listing_id>/<str:user>", views.listings_view, name="listings_view"),
+    
     path("watchlist", views.watchlist, name="watchlist"),
+    path("watchlist/<str:user>", views.watchlist, name="watchlist"),
+       
 
-    path("change_watchlist/<str:listing_id>", views.change_watchlist, name="change_watchlist"),
-    path("change_watchlist", views.change_watchlist, name="change_watchlist"),
+  
+   path("watchlist_change/<str:listing_id>", views.watchlist_change, name="watchlist_change"),
+   path("watchlist_change", views.watchlist_change, name="watchlist_change"),
+
 
     path("bid/<str:listing_id>", views.bid, name="bid"),
     path("bid", views.bid, name="bid"),  

@@ -14,47 +14,29 @@ image: <img src="{{ listings.image.url }}"/>
 <img src="{{ listing.image.url }}"/>
 
 
-
-<h4> Add to Watchlist </h4>
-<form action="{% url 'change_watchlist' listing_id %}" method="POST">
+<form action="{% url 'watchlist_change' listing %}" method="POST">
     {% csrf_token %}
-    {{watchlist_form.as_p}}
-    <input type="submit" class="btn btn-primary"  value="Add/Remove Watchlist">
+    {{watchlist_form}}
+    <input class="btn btn-primary" type="submit">
 </form>
 
-{% for w in watchers %}
-<li>{{w.user}}</li>
-<li>{{w.user.username}}</li>
-{% endfor %}
-   
+
 
 <h4> Enter bid amount: </h4>
-<form action="{% url 'bid' listing_id %}" method="POST">
+<form action="{% url 'bid' listing %}" method="POST">
     {% csrf_token %}
     {{bid_form}}
     <input class="btn btn-primary" type="submit" value="bid here">
 </form>
+<br>
 
 
 <h4> Add a comment: </h4>
-<form action="{% url 'bid' listing_id %}" method="POST">
+<form action="{% url 'bid' listing %}" method="POST">
     {% csrf_token %}
     {{comment_form}}
     <input class="btn btn-primary" type="submit" value="comment">
 </form>
-
-<ul><h3><a >wachers</a></h3>
-{% for w in  watchers %}
-    
-<li>w.user: {{w.user|safe}}</li>
-<li>w.id: {{w.id|safe}}</li>
-<li>w.username{{w.username|safe}}</li>
-<li>{{w.message|safe}}</li>
-{% endfor %}
-</ul>
-
-
-<a href="{% url 'index' %}">All Listings</a>
-
+<br>
 
 {% endblock %}

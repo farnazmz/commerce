@@ -1,13 +1,20 @@
 from cProfile import label
 from email.policy import default
+from hashlib import blake2b
+from importlib.metadata import files
 from random import choices
 from select import select
 from sre_parse import CATEGORIES
+from tkinter import Widget
 from tkinter.tix import Select
 from typing import Any
 
 from unicodedata import category
+from attr import fields
 from django import forms
+from django.forms import BooleanField, ModelForm
+from sqlalchemy import null
+from .models import Watchlist
 
 
 class ListingForm(forms.Form):
@@ -50,14 +57,22 @@ class CategoryForm(forms.Form):
     category = forms.CharField(label="", widget=forms.Select(choices=CATEGORIES))
     active = forms.BooleanField(required=False)
 
-class WatchlistForm(forms.Form):
-    
-   
-    change_watch = forms.BooleanField (required=False, widget=forms.Select(choices=[
-        ('true', 'Add to Watchlist'),
-        ('false', 'Remove from Watchlist')
-    ]))
-
+class WatchlistForm(ModelForm):
+    is_on_watchlist = forms.ChoiceField(widget=forms.Select(choices=
+        [
+            ('true', 'True'),
+            ('false', 'False')
+        ]
+        ))
+    class Meta:
+        model = Watchlist
+        exclude = ['user', 'listing']
+        
+        labels ={
+            ('Add to Watchlist'),
+            ('Remove from Watchlist')
+        }
+        
 
 class BidForm(forms.Form):
     bid_amount = forms.FloatField(label="", widget=forms.NumberInput(), required=False)
