@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-{% for a in listings_on_watchlist %}
+{% for a in watchlists %}
 <ul>
     <li><a href="{{a.listing.get_absolute_url}}">{{a.listing.title|safe}}</a></li>
     <li>seller: {{a.listing.seller|safe}}</li>
@@ -9,7 +9,7 @@
 </ul>
  {% endfor %}
 
-
+{{change_view}}
 
 
 {% endblock %}

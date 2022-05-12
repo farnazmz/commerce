@@ -14,16 +14,23 @@ image: <img src="{{ listings.image.url }}"/>
 <img src="{{ listing.image.url }}"/>
 
 
-<form action="{% url 'watchlist_change' listing %}" method="POST">
+{% if logged_in %}
+
+<form action="{% url 'watchlist_change' listing_id  %}" method="POST">
     {% csrf_token %}
     {{watchlist_form}}
     <input class="btn btn-primary" type="submit">
 </form>
 
 
+{% for a in in_watchlist %}
+{{a.id}}
+{% endfor %}
+
+
 
 <h4> Enter bid amount: </h4>
-<form action="{% url 'bid' listing %}" method="POST">
+<form action="{% url 'bid' listing_id %}" method="POST">
     {% csrf_token %}
     {{bid_form}}
     <input class="btn btn-primary" type="submit" value="bid here">
@@ -32,11 +39,18 @@ image: <img src="{{ listings.image.url }}"/>
 
 
 <h4> Add a comment: </h4>
-<form action="{% url 'bid' listing %}" method="POST">
+<form action="{% url 'bid' listing_id %}" method="POST">
     {% csrf_token %}
     {{comment_form}}
     <input class="btn btn-primary" type="submit" value="comment">
 </form>
 <br>
+
+{% endif %}
+
+Watchers
+{% for w in in_watchlist %}
+<li>{{w}}</li>
+{% endfor %}
 
 {% endblock %}

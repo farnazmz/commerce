@@ -54,11 +54,14 @@ class Listing(models.Model):
         return reverse('listings_view', args=[str(self.id)])
 
 class Watchlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="is_on_watchlist", blank=True, null=True)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="is_on_watchlist", blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, blank=True, null=True)
+    is_on_watchlist = models.CharField(max_length=64, null=True, blank=True, default="")
 
     def __str__(self):
-        return f"{self.user}{self.listing}"
+        return f"{self.listing}"
+
+    
         
   
 class Bid(models.Model):

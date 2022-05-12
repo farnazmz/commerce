@@ -145,46 +145,39 @@ def listings(request):
 login_required()
 def watchlist_change(request, listing_id): 
     if request.method == "POST":
-        listing = Listing.objects.get(pk=listing_id)
-        watching = Watchlist.objects.filter(listing=listing_id)
-        watchers = [w.user for w in watching]
-        watcher = Watchlist.objects.filter(user=request.user, listing=listing_id)
         watchlist_form = WatchlistForm(request.POST)
         if watchlist_form.is_valid():
-            is_on_watchlist =  watchlist_form.cleaned_data["is_on_watchlist"]  
-            if is_on_watchlist == True and watcher not in watching:
-                watchlist_form.save()
-            elif is_on_watchlist == False and watcher in watching:
-                Watchlist.objects.filter(user=request.user, listing=listing_id).delete()
-                return render(request, "auctions/watchlist.html", {
-                    "watchlist":Watchlist.objects.filter(user=request.user),
-                    "listing_id":listing_id,
-                    "listing":listing,
-                    "watchers":watchers
-                })         
+            change_view =  watchlist_form.cleaned_data["change_view"]
+            listing_id = Listing.objects.get(id=listing_id)
+            watchlistitems = Watchlist.objects.filter(user=request.user, listing=listing_id)
+            if watchlistitems:
+                if not change_view:
+                    Watchlist.objects.filter(user=request.user, listing=listing_id).delete()
+                else:
+                    "message" == "nothing to delete"
+            else:
+                if change_view:
+                    w = Watchlist(user=request.user, listing=listing_id)
+                    w.save()
+                else:
+                    "message" == "already on watchlist"
 
+            return HttpResponseRedirect(reverse("watchlist"))
+        else:
+            "message" == "invalid form"
     else:
-        return render(request, "auctions/watchlist.html", {  
-            "listings_on_watchlist":request.user.is_on_watchlist.all(), 
-            "watchlist":Watchlist.objects.filter(user=request.user),
-            "user":request.user
-            })
-
+        return HttpResponseRedirect(reverse("watchlist"))
 
 
 login_required()
 def watchlist(request):
-
-
-    
+    listing_id = Listing.objects.all()
     return render(request, "auctions/watchlist.html", {  
-            "user":request.user,       
-            "listings_on_watchlist":request.user.is_on_watchlist.all(),
-           
-                
+            "user":request.user,   
+            "watchlists": Watchlist.objects.filter(user=request.user),
+            "listing_id":listing_id
+                              
                 })
-
-
 
 
 login_required()
@@ -219,47 +212,21 @@ def bid(request, listing_id):
       
 login_required()
 def listings_view(request, listing_id):  
-    listing = Listing.objects.get(pk=listing_id) 
-    if request.user.is_authenticated:
-        if request.method == "POST": 
-            watchers = watchlist_change(listing)
-
-        else:           
-            return render(request, "auctions/listings_view.html", {
+    listing_id = Listing.objects.get(pk=listing_id) 
+    if request.user.is_authenticated:   
+        return render(request, "auctions/listings_view.html", {
                     "comment_form":CommentForm(),
                     "bid_form":BidForm(),
-                    "watchlist_form":WatchlistForm(),
-                    "user_is_authenticated": request.user.is_authenticated,
-                    "seller": listing.seller,
-                    "listing":listing,
-                    "user":request.user,
-                   
+                    "watchlist_form":WatchlistForm(),                   
+                    "listing_id": listing_id,
+                    "logged_in":request.user.is_authenticated,
+                    "seller":str(request.user) == str(listing_id.seller),
+                    "in_watchlist":Watchlist.objects.filter(user=request.user, listing=listing_id)                   
             }) 
-    else:     
+    else:            
         return render(request,"auctions/listings_view.html", { 
-        "listing_id": listing_id,
-        "user_is_authenticated": request.user.is_authenticated,
-        "is_on_watchlist": False,
-        "watchers":watchers,
-       
-
+        "logged_in":request.user.is_authenticated,
+        "listing":listing_id,
+        "in_wachlist":false
         }) 
  
-"""       
-    watchlist_form = WatchlistForm(request.POST)
-        if watchlist_form.is_valid():
-            is_on_watchlist = watchlist_form.cleaned_data["is_on_watchlist"]
-            if is_on_watchlist == "true":
-                listing = Listing.objects.get(id=listing_id)
-                if not Watchlist.objects.filter(user=request.user, listing=listing_id):
-                    watch = Watchlist(
-                            listing=listing_id, 
-                            user=request.user,                          
-                        )
-                    watch.save
-            else:
-                if Watchlist.objects.filter(user=request.user, listing=listing_id):
-                        Watchlist.objects.filter(user=request.user, listing=listing_id).delete()
-                  
-    return HttpResponseRedirect(reverse("watchlist"))
-""" 

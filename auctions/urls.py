@@ -18,23 +18,19 @@ urlpatterns = [
     path("listings_view", views.listings_view, name="listings_view"),
 
     path("listings_view/<str:listing_id>", views.listings_view, name="listings_view"),
-    path("listings_view/<str:listing_id>/<str:user>", views.listings_view, name="listings_view"),
-    
+ 
+
     path("watchlist", views.watchlist, name="watchlist"),
-    path("watchlist/<str:user>", views.watchlist, name="watchlist"),
-       
 
-  
-   path("watchlist_change/<str:listing_id>", views.watchlist_change, name="watchlist_change"),
-   path("watchlist_change", views.watchlist_change, name="watchlist_change"),
-
+   
+    path("<int:listing_id>", views.watchlist_change, name="watchlist_change"),
+   
 
     path("bid/<str:listing_id>", views.bid, name="bid"),
     path("bid", views.bid, name="bid"),  
 
 ]
-   
-      
+     
       
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
