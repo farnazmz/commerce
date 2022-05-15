@@ -65,24 +65,13 @@ class Watchlist(models.Model):
         
   
 class Bid(models.Model):
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)        
-    bid_time = models.DateTimeField()
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE,blank=True, null=True)        
+    bid_time = models.DateTimeField(auto_now_add=True)
     bid_amount = models.FloatField(null=True)
     def __str__(self):
-        return f"{self.listing}" 
+        return f"{self.bid_amount}" 
 
-    def max_bid(self):
-        highest = self.bid_amount.all()
-        h_bids = [bid.bid_amount for bid in highest]
-        if len(h_bids) > 0:
-            h = max(h_bids)
-            listing = Listing.objects.get(listing=listing)
-            h_price = [l.price for l in listing]
-            if float(h) > float(h_price):
-                return max(h_bids) 
-        else:
-            return float(0)
-           
+
     
 class Comment(models.Model):  
     user = models.ForeignKey(User, on_delete=models.CASCADE) 

@@ -1,3 +1,5 @@
+from mailbox import Message
+from pyexpat.errors import messages
 from typing import Any
 from django import *
 from ast import arg
@@ -29,6 +31,8 @@ from tokenize import cookie_re
 from .forms import WatchlistForm, BidForm, CommentForm, ListingForm, CategoryForm
 from .models import User, Listing, Watchlist, Bid, Comment
 from django.template import loader
+from django.contrib import messages
+from django.template import Context, Template
 
 def index(request):  
     listings = Listing.objects.all()
@@ -154,20 +158,19 @@ def watchlist_change(request, listing_id):
                 if not change_view:
                     Watchlist.objects.filter(user=request.user, listing=listing_id).delete()
                 else:
-                    "message" == "nothing to delete"
+                    messages.warning(request, 'Already on watchlist')
             else:
                 if change_view:
                     w = Watchlist(user=request.user, listing=listing_id)
                     w.save()
                 else:
-                    "message" == "already on watchlist"
+                    messages.warning(request, 'Nothing to Remove!')
 
             return HttpResponseRedirect(reverse("watchlist"))
         else:
-            "message" == "invalid form"
+            messages.warning(request, 'Invalid Form')
     else:
         return HttpResponseRedirect(reverse("watchlist"))
-
 
 login_required()
 def watchlist(request):
@@ -175,58 +178,103 @@ def watchlist(request):
     return render(request, "auctions/watchlist.html", {  
             "user":request.user,   
             "watchlists": Watchlist.objects.filter(user=request.user),
-            "listing_id":listing_id
-                              
+            "listing_id":listing_id,                                        
                 })
-
 
 login_required()
 def bid(request, listing_id):
-    if request.method == "GET":
+    if request.method == "POST":
+        listing_id = Listing.objects.get(id=listing_id)
+        h_price = listing_id.price
+        h_price = float(h_price)
         bid_form = BidForm(request.POST)
         if bid_form.is_valid():
-            bid_amount = bid_form.cleaned_data["bid_amount"]        
-            if float(bid_amount) > float(listing.max_bid()):
-                listing = bid
-                bid = Bid(
-                    bid = listing_id
-                )
-                bid.save()
-                
-                listing = Listing.objects.get(id=listing_id)
-                float(listing.price) == float(bid_amount)
-                listing = Listing(
-                    price=bid_amount
-                )
-                listing.save()
-                return render(request, "auctions/listings_view.html", {
-                    "price": bid_amount,
-                    "listing":listing,
-                    "listing_id":listing_id,
-                    "message": "highest bid :"
-                })
+            bid_amount = bid_form.cleaned_data["bid_amount"]
+            bid_amount = float(bid_amount)           
+            if bid_amount > h_price:
+                    b = Bid(
+                        listing = listing_id,
+                        bid_amount = bid_amount
+                    )
+                    b.save()
+            else:
+                messages.warning(request, 'make a higher bid')
+                return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
+
+            return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))                          
         else:
-            return render(request, "auctions/listings_view.html", {
-                "message":"please enter higher and valid number"
-            })
+            return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
+    else:
+        return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
+
+
+login_required()
+def comment(request, listing_id):
+    if request.method == "POST":
+        listing_id = Listing.objects.get(id=listing_id)
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.cleaned_data["comment"]
+            c = Comment(
+                comment=comment,
+                user=request.user,
+                listing=listing_id
+            )
+            c.save()
+            return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
+        else:
+            return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
+    else:
+        return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
+
+
+
       
 login_required()
 def listings_view(request, listing_id):  
-    listing_id = Listing.objects.get(pk=listing_id) 
-    if request.user.is_authenticated:   
+    listing_id = Listing.objects.get(pk=listing_id)  
+    bids = Bid.objects.filter(listing=listing_id)
+    comments = Comment.objects.filter(listing_id=listing_id)
+    watchin = Watchlist.objects.filter(listing=listing_id)
+    watchers = [wa.user for wa in watchin]
+    if not watchers:
+        messages.warning(request, 'Be the first to watch.')    
+    if bids:
+        bid = [b.bid_amount for b in bids]
+        bid_amount = max(bid)
+    else:
+        bid_amount = ""        
+    if comments:
+        comment = [c.comment for c in comments] 
+        comment = str(comment)
+    else:
+        comment = str("")
+    if request.user.is_authenticated:  
         return render(request, "auctions/listings_view.html", {
-                    "comment_form":CommentForm(),
-                    "bid_form":BidForm(),
-                    "watchlist_form":WatchlistForm(),                   
-                    "listing_id": listing_id,
-                    "logged_in":request.user.is_authenticated,
-                    "seller":str(request.user) == str(listing_id.seller),
-                    "in_watchlist":Watchlist.objects.filter(user=request.user, listing=listing_id)                   
-            }) 
+                            "comment_form":CommentForm(),
+                            "bid_form":BidForm(),
+                            "watchlist_form":WatchlistForm(),                   
+                            "listing_id": listing_id,
+                            "logged_in":request.user.is_authenticated,
+                            "seller":str(request.user) == str(listing_id.seller),
+                            "in_watchlist":Watchlist.objects.filter(user=request.user, listing=listing_id),
+                            "is_authenticated":request.user.is_authenticated,
+                            "listing":listing_id,
+                            "bids":bids,
+                            "bid_amount":bid_amount,
+                            "comments":Comment.objects.filter(user=request.user, listing=listing_id),
+                            "comment":comment,
+                            "watchers":watchers,
+                            
+                            
+                            
+                            
+
+                }) 
     else:            
         return render(request,"auctions/listings_view.html", { 
-        "logged_in":request.user.is_authenticated,
-        "listing":listing_id,
-        "in_wachlist":false
-        }) 
- 
+                "is_authenticated":request.user.is_authenticated,
+                "listing":listing_id,
+                "in_wachlist":false
+                }) 
+    

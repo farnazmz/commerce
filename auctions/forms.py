@@ -58,7 +58,7 @@ class CategoryForm(forms.Form):
     active = forms.BooleanField(required=False)
 
 class WatchlistForm(forms.Form):
-    change_view = forms.NullBooleanField(required=False, widget=forms.Select(choices=[('true', 'Add to Watchlist'), ('false', 'Remove from Watchlist')]))
+    change_view = forms.NullBooleanField(required=False, label="", widget=forms.Select(choices=[('true', 'Add to Watchlist'), ('false', 'Remove from Watchlist')]))
     
 
 class BidForm(forms.Form):

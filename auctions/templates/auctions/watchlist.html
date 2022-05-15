@@ -9,7 +9,11 @@
 </ul>
  {% endfor %}
 
-{{change_view}}
+ {% for message in messages %}
+ {{message}}
+ {% endfor %}
+ <br>
+ 
 
 
 {% endblock %}
