@@ -70,4 +70,4 @@ class CommentForm(forms.Form):
     
 
 class EditForm(forms.Form):
-    active = forms.BooleanField(required=False)
+    edit = forms.BooleanField(required=True, label="edit", widget=forms.Select(choices=[('true', 'Close this listing'), ('false', 'Edit this listing')]))

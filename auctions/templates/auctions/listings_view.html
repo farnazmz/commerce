@@ -38,7 +38,7 @@ current price:
 <form action="{% url 'bid' listing_id %}" method="POST">
     {% csrf_token %}
     {{bid_form}}
-    <input class="btn btn-primary" type="submit" value="Your Bid">
+    <input class="btn btn-primary" type="submit" value="Bid">
 </form>
 <br>
 
@@ -60,10 +60,15 @@ watchers:
 <br>
 
 {% for b in bids %}
-<li>winner {{b.user}}:  {{b.bid_amount}}</li>
+<li>winner {{b.bid_amount|safe}}</li>
 {% endfor %}
 <br>
 
+
+{% for w in winner %}
+<li>winner {{w.user}}</li>
+{% endfor %}
+<br>
 
 {% if seller %}
 you are the seller, change listing
@@ -72,7 +77,7 @@ you are the seller, change listing
 <form action="{% url 'edit' listing_id %}" method="POST" >
     {% csrf_token %}
     {{edit_form}}       
-    <input class="btn btn-primary" type="submit" value="close this auction">
+    <input class="btn btn-primary" type="submit" value="edit">
 </form>
 <br>
 
