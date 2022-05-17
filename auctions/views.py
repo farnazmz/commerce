@@ -300,6 +300,7 @@ def listings_view(request, listing_id):
         comment = str(comment)
     else:
         comment = str("")
+    
     if request.user.is_authenticated:  
         return render(request, "auctions/listings_view.html", {
             "comment_form":CommentForm(),
@@ -315,7 +316,8 @@ def listings_view(request, listing_id):
             "comments":Comment.objects.filter(listing=listing_id),
             "comment":comment,
             "watchers":watchers,
-            "winner":Bid.objects.filter(listing=listing_id, bid_amount=bid_amount)
+            "winner":Bid.objects.filter(listing=listing_id, bid_amount=bid_amount),
+            "you_are_winner": request.user
             
                    
            

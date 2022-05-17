@@ -70,6 +70,19 @@ watchers:
 {% endfor %}
 <br>
 
+
+{% for w in winner %}
+{% if you_are_winner == w.user %}
+YOU ARE THE WINNER
+{% endif %}
+
+<li>winner {{w.user}}</li>
+
+
+{% endfor %}
+
+
+
 {% if seller %}
 you are the seller, change listing
 <br>
