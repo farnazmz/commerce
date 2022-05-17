@@ -123,7 +123,9 @@ def listings(request):
             price = form.cleaned_data["price"]
             description = form.cleaned_data["description"]
             image = form.cleaned_data["image"]
-            acitve =  form.cleaned_data["active"]                  
+            active =  form.cleaned_data["active"] 
+            
+                          
             listing = Listing(
             seller=request.user,
             title=title,
@@ -131,7 +133,7 @@ def listings(request):
             price=price,
             description=description,
             image=image, 
-            active=acitve
+            active=active
             )
             listing.save()
             return redirect("index")
@@ -208,14 +210,19 @@ def bid(request, listing_id):
                     messages.warning(request, 'make a higher bid')
                     return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))                   
             else:
-                b = Bid(
-                    listing = listing_id,
-                    bid_amount = bid_amount, 
-                    user = request.user
-                    )
-                b.save()   
-                messages.warning(request, 'first bid submitted ')
-                return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
+                if bid_amount > h_price:
+                    b = Bid(
+                        listing = listing_id,
+                        bid_amount = bid_amount, 
+                        user = request.user
+                        )
+                    b.save()   
+                    messages.warning(request, 'first bid submitted ')
+                    return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
+                else:
+                    messages.warning(request, 'make a higher bid')
+                    return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
+
         else:
             return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
 
@@ -244,30 +251,20 @@ def comment(request, listing_id):
 
 login_required()
 def edit(request, listing_id):
-    listing_id = Listing.objects.get(id=listing_id)
-    seller = [s.seller for s in listing_id]
-    user = request.user
-    if user == seller:
-        if request.method =="POST":
+    listing_id = Listing.objects.get(pk=listing_id)
+    if request.method == "POST":
+        seller = listing_id.seller
+        user = request.user
+        if user == seller:
             edit_form = EditForm(request.POST)
-            if edit_form.is_valid:
-                edit = edit_form.cleaned_data["edit"]
-                if edit:
-                    listing = Listing(
-                    seller=request.user,
-                    id = listing_id,
-                    active=false
-                    )
-                    listing.save()
+            if edit_form.is_valid():
+                active = edit_form.cleaned_data["active"]
+                if not active:
+                    listing_id.active = False
+                    listing_id.save()
                     bids = Bid.objects.filter(listing=listing_id)
                     if bids:
-                        users = [w.user for w in bids]
-                        winner = users
-                        b = Bid(
-                            listing=listing_id,
-                            user=winner
-                        )
-                        b.save()
+                        "bids" == bids
                         messages.warning(request, 'auction closed, winner is:')
                         return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
                     else:
@@ -315,7 +312,7 @@ def listings_view(request, listing_id):
             "listing":listing_id,
             "logged_in": request.user.is_authenticated,
             "bid_amount":bid_amount,
-            "comments":Comment.objects.filter(user=request.user, listing=listing_id),
+            "comments":Comment.objects.filter(listing=listing_id),
             "comment":comment,
             "watchers":watchers,
             "winner":Bid.objects.filter(listing=listing_id, bid_amount=bid_amount)

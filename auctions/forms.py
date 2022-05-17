@@ -37,7 +37,7 @@ class ListingForm(forms.Form):
     ('sports', 'Sports')
     ] 
     category = forms.CharField(label="", widget=forms.Select(choices=CATEGORIES))
-    active = forms.BooleanField(required=False)
+    active = forms.NullBooleanField(required=False, label="", widget=forms.Select(choices=[('true', 'Active'), ('false', 'Not Active')]))
 
 
 class CategoryForm(forms.Form):
@@ -70,4 +70,4 @@ class CommentForm(forms.Form):
     
 
 class EditForm(forms.Form):
-    edit = forms.BooleanField(required=True, label="edit", widget=forms.Select(choices=[('true', 'Close this listing'), ('false', 'Edit this listing')]))
+    active = forms.NullBooleanField(required=False, label="", widget=forms.Select(choices=[('true', 'Active'), ('false', 'Not Active')]))

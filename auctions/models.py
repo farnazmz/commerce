@@ -44,7 +44,7 @@ class Listing(models.Model):
     creation_date = models.DateTimeField(auto_now=True, blank=True)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing")
     category = models.CharField(max_length=50, choices=CATEGORIES)
-    active = models.BooleanField(default=True) 
+    active = models.BooleanField() 
    
      
     def __str__(self):

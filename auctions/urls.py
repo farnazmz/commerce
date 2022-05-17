@@ -29,7 +29,7 @@ urlpatterns = [
     path("comment/<int:listing_id>", views.comment, name="comment"), 
 
     path("edit", views.edit, name="edit"), 
-    path("<int:listing_id>", views.edit, name="edit"), 
+    path("edit/<int:listing_id>", views.edit, name="edit"), 
      
 ]
      
