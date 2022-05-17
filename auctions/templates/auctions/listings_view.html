@@ -55,14 +55,31 @@ watchers:
 
 
 {% for message in messages %}
-{{message}}
+<li>{{ message }}</li>
 {% endfor %}
 <br>
 
+{% for b in bids %}
+<li>winner {{b.user}}:  {{b.bid_amount}}</li>
+{% endfor %}
+<br>
+
+
 {% if seller %}
 you are the seller, change listing
-Watchers
+<br>
+
+<form action="{% url 'edit' listing_id %}" method="POST" >
+    {% csrf_token %}
+    {{edit_form}}       
+    <input class="btn btn-primary" type="submit" value="close this auction">
+</form>
+<br>
+
 {% endif %}
+<br>
+
+
 
 {% endif %}
 

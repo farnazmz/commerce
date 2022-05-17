@@ -14,7 +14,7 @@ from attr import fields
 from django import forms
 from django.forms import BooleanField, ChoiceField, ModelForm, NullBooleanSelect
 from sqlalchemy import true, false, null
-from .models import Watchlist
+from .models import Watchlist, Bid, Comment, User, Listing
 
 
 class ListingForm(forms.Form):
@@ -62,10 +62,12 @@ class WatchlistForm(forms.Form):
     
 
 class BidForm(forms.Form):
-    bid_amount = forms.FloatField(label="", widget=forms.NumberInput(), required=False)
+    bid_amount = forms.FloatField(label="", widget=forms.NumberInput(attrs={"PlaceHolder":"Bid"}), required=False)
 
 
 class CommentForm(forms.Form):
     comment = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Comment"}), required=False)
     
 
+class EditForm(forms.Form):
+    active = forms.BooleanField(required=False)

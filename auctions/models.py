@@ -65,13 +65,11 @@ class Watchlist(models.Model):
         
   
 class Bid(models.Model):
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE,blank=True, null=True)        
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE) 
     bid_time = models.DateTimeField(auto_now_add=True)
     bid_amount = models.FloatField(null=True)
-    def __str__(self):
-        return f"{self.bid_amount}" 
-
-
+  
     
 class Comment(models.Model):  
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
