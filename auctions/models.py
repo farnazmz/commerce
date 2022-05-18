@@ -23,6 +23,7 @@ from sqlalchemy import false, true
 class User(AbstractUser):
     pass
 
+
 class Listing(models.Model):
     CATEGORIES= [
     ('clothing, shoes', 'Clothing, Shoes'),
@@ -45,13 +46,13 @@ class Listing(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing")
     category = models.CharField(max_length=50, choices=CATEGORIES)
     active = models.BooleanField() 
-   
      
     def __str__(self):
         return f"{self.id}"
     
     def get_absolute_url(self): 
         return reverse('listings_view', args=[str(self.id)])
+
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
@@ -61,9 +62,7 @@ class Watchlist(models.Model):
     def __str__(self):
         return f"{self.listing}"
 
-    
-        
-  
+
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE) 

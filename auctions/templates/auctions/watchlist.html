@@ -1,6 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+
 {% for a in watchlists %}
 <ul>
     <li><a href="{{a.listing.get_absolute_url}}">{{a.listing.title|safe}}</a></li>

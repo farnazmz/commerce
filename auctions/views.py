@@ -35,7 +35,7 @@ from django.contrib import messages
 from django.template import Context, Template
 
 def index(request):  
-    listings = Listing.objects.all()
+    listings = Listing.objects.filter(active=True)
     for listing in listings:
         return render(request, "auctions/index.html", {
             "listing": listing,
@@ -123,9 +123,7 @@ def listings(request):
             price = form.cleaned_data["price"]
             description = form.cleaned_data["description"]
             image = form.cleaned_data["image"]
-            active =  form.cleaned_data["active"] 
-            
-                          
+            active =  form.cleaned_data["active"]                        
             listing = Listing(
             seller=request.user,
             title=title,
@@ -222,14 +220,11 @@ def bid(request, listing_id):
                 else:
                     messages.warning(request, 'make a higher bid')
                     return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
-
         else:
             return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
-
     else:
         return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
        
-
 login_required()
 def comment(request, listing_id):
     if request.method == "POST":
@@ -274,12 +269,10 @@ def edit(request, listing_id):
                 return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
             else:
                 return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
-
         else:
             return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
     else:
         return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
-
 
 login_required()
 def listings_view(request, listing_id):  
@@ -299,8 +292,7 @@ def listings_view(request, listing_id):
         comment = [c.comment for c in comments] 
         comment = str(comment)
     else:
-        comment = str("")
-    
+        comment = str("")   
     if request.user.is_authenticated:  
         return render(request, "auctions/listings_view.html", {
             "comment_form":CommentForm(),
@@ -317,16 +309,12 @@ def listings_view(request, listing_id):
             "comment":comment,
             "watchers":watchers,
             "winner":Bid.objects.filter(listing=listing_id, bid_amount=bid_amount),
-            "you_are_winner": request.user
-            
-                   
-           
+            "you_are_winner": request.user                            
             }) 
     else:            
         return render(request,"auctions/listings_view.html", { 
             "is_authenticated":request.user.is_authenticated,
             "listing":listing_id,
-            "in_wachlist":false,
-        
+            "in_wachlist":false,      
             }) 
     

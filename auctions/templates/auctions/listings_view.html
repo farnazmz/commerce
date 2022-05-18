@@ -2,23 +2,20 @@
 
 {% block body %}
 
-
-
 <img src="{{ listing.image.url }}"/>
 <br>
 
-<p>listings.id:  {{listing.id}}</p>
-<p>title : {{listing.title}}</p>
-<p>description:  {{listing.description}}</p>
-<p>category:  {{listing.category}}</p>
-<p>seller:  {{listing.seller}}</p>
-<p>created on: {{listing.creation_date}}</p>
-<p>active: {{listing.active}}</p>
-<p>starting bid:  {{listing.price}}</p>
-current price:
-{{bid_amount}}
+<p>Listings Id: {{listing.id}}</p>
+<p>Title: {{listing.title}}</p>
+<p>Description: {{listing.description}}</p>
+<p>Category: {{listing.category}}</p>
+<p>Seller: {{listing.seller}}</p>
+<p>Created on: {{listing.creation_date}}</p>
+<p>Status: {{listing.active}}</p>
+<p>Price: {{listing.price}}</p>
+<p>Current Bid: {{bid_amount}}</p>
 <br>
-<br>
+
 {% if is_authenticated %}
 
 <form action="{% url 'watchlist_change' listing_id  %}" method="POST">
@@ -42,6 +39,7 @@ current price:
 </form>
 <br>
 
+Comments:
 {% for c in comments %}
 <li>{{c.user}}:  {{c.comment}}</li>
 {% endfor %}
@@ -53,38 +51,30 @@ watchers:
 {% endfor %}
 <br>
 
-
 {% for message in messages %}
 <li>{{ message }}</li>
 {% endfor %}
 <br>
 
 {% for b in bids %}
-<li>winner {{b.bid_amount|safe}}</li>
+<li>Highest Bid: {{b.bid_amount|safe}}</li>
 {% endfor %}
 <br>
-
 
 {% for w in winner %}
-<li>winner {{w.user}}</li>
+<li>Current Winner {{w.user}}</li>
 {% endfor %}
 <br>
-
 
 {% for w in winner %}
 {% if you_are_winner == w.user %}
 YOU ARE THE WINNER
 {% endif %}
 
-<li>winner {{w.user}}</li>
-
-
 {% endfor %}
 
-
-
 {% if seller %}
-you are the seller, change listing
+You are the seller, Change listing
 <br>
 
 <form action="{% url 'edit' listing_id %}" method="POST" >
@@ -97,9 +87,6 @@ you are the seller, change listing
 {% endif %}
 <br>
 
-
-
 {% endif %}
-
 
 {% endblock %}

@@ -1,31 +1,25 @@
 {% extends "auctions/layout.html" %}
-
+{% load static %}
 {% block body %}
     <h2>Active Listings</h2>
    
-
     {% for listing in listings %}
-
   <ul>
-    <h1><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h1>
-    listing_id: {{listing.id}}
-    <li><a href="{% url 'index'  %}"> Title: {{ listing.title|safe }}</a></li>
-    <li> <a href="{% url 'index' %}">image: 
-      <img src="{{ listing.image.url }}"/></a>
-      </li>
-    <li><a href="{% url 'index'  %}"> Price: {{ listing.price }}</a></li>
-    <li><a href="{% url 'index'  %}"> Description: {{ listing.description }}</a></li>
-    <li><a href="{% url 'index'  %}"> Category: {{ listing.category }}</a></li>
-    <li><a href="{% url 'index'  %}"> Seller: {{ listing.seller|safe }}</a></li>
-    <li><a href="{% url 'index' %}">Date: {{listing.creation_date}}</a></li>
-    <li><a href="{% url 'index' %}">Active: {{listing.active}}</a></li>
 
+    <h1><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h1>
+
+    <li>Listing Id: {{ listing.id }}</li>
+    <li>Title: {{ listing.title|safe }}</li>
+    <li><img src="{{ listing.image.url }}"/></li>
+    <li>Price: {{ listing.price }}</li>
+    <li>Description: {{ listing.description }}</a></li>
+    <li>Category: {{ listing.category }}</a></li>
+    <li>Seller: {{ listing.seller|safe }}</a></li>
+    <li>Date: {{ listing.creation_date }}</li>
+    <li>Status: {{ listing.active }}</a></li>
 
 </ul>
     {% endfor %}
-    
-    TODO
-    
-    <a href="listings">list here</a>
+    <a href="listings">List Here</a>
 
 {% endblock %}
