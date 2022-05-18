@@ -1,0 +1,18 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+{% for a in watchlists %}
+<ul>
+    <li><a href="{{a.listing.get_absolute_url}}">{{a.listing.title|safe}}</a></li>
+    <li>seller: {{a.listing.seller|safe}}</li>
+    <li>price: {{a.listing.price|safe}}</li>
+</ul>
+ {% endfor %}
+
+ {% for message in messages %}
+ {{message}}
+ {% endfor %}
+ <br>
+ 
+{% endblock %}

@@ -1,7 +1,9 @@
+
+from random import expovariate
+import django
 from enum import auto
 from pyexpat import model
 import re
-
 from django.core.management import call_command
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -15,11 +17,12 @@ from typing import Any
 from unicodedata import category
 from click import password_option
 from django.urls import reverse
-from requests import session
+from requests import request, session
 from sqlalchemy import false, true
 
 class User(AbstractUser):
     pass
+
 
 class Listing(models.Model):
     CATEGORIES= [
@@ -42,62 +45,37 @@ class Listing(models.Model):
     creation_date = models.DateTimeField(auto_now=True, blank=True)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing")
     category = models.CharField(max_length=50, choices=CATEGORIES)
-    active = models.BooleanField(default=True) 
-    
-
+    active = models.BooleanField() 
+     
     def __str__(self):
         return f"{self.id}"
-                    
-    def listingprint(self):
-        return f"listing_id: {self.id} / title: {self.title}/ seller: {self.seller}/  price: {self.price}"
-
-   
     
     def get_absolute_url(self): 
-            return reverse('listings_view', args=[str(self.id)])
+        return reverse('listings_view', args=[str(self.id)])
 
 
 class Watchlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, blank=True, null=True)
+    is_on_watchlist = models.CharField(max_length=64, null=True, blank=True, default="")
+
     def __str__(self):
-        return f"{self.id}"
-        
-    def watchprint(self):
-        return f"watchlist.user: {self.user}/ auction: {self.listing}" 
-  
+        return f"{self.listing}"
+
+
 class Bid(models.Model):
- 
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)        
-    bid_time = models.DateTimeField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE) 
+    bid_time = models.DateTimeField(auto_now_add=True)
     bid_amount = models.FloatField(null=True)
-    def __str__(self):
-        return f"{self.listing}" 
-
-    def max_bid(self):
-        highest = self.bid_amount.all()
-        h_bids = [bid.bid_amount for bid in highest]
-        if len(h_bids) > 0:
-            h = max(h_bids)
-            listing = Listing.objects.get(listing=listing)
-            h_price = [l.price for l in listing]
-            if float(h) > float(h_price):
-                return max(h_bids) 
-        else:
-            return float(0)
-    def __str__(self):
-        return f"{self.listing}" 
-            
-            
-
-
+  
+    
 class Comment(models.Model):  
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE)  
     comment = models.TextField(null=True) 
     time_sent = models.DateTimeField(null=True) 
+
     def __str__(self):
-            return f"{self.id}" 
-    def commentprint(self):
-        return f"bid.id: {self.id}/ bid_amount: {self.comment}/  auction{self.listing}" 
+            return f"{self.comment}" 
    

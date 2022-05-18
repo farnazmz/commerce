@@ -2,17 +2,12 @@
 
 {% block body %}
 
-   
 <h3>{{category_name|safe}}</h3>
 
 {% for listing in listings %}
-
 <ul>
     <h1><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h1>
     <li><a href="{% url 'category_page'  %}"> Title: {{listing.title|safe}} </a></li>
-
-
-
     <li><a href="{% url 'category_page'  %}"> Image:<img src="{{ listing.image.url }}"/></a></li>
     <li><a href="{% url 'category_page'  %}"> Price: {{listing.price|safe}} </a></li>
     <li><a href="{% url 'category_page'  %}"> Description: {{listing.description|safe}} </a></li>
@@ -23,13 +18,7 @@
 </ul>
 
 {% endfor %}
-
     {% if message %}
         <div>{{ message }}</div>
     {% endif %}
-
-
-
-  
-   
 {% endblock %}

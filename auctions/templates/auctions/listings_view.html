@@ -2,48 +2,91 @@
 
 {% block body %}
 
-<p>listings.id:  {{listing.id}}</p>
-<p>title : {{listing.title}}</p>
-<p>{{listing.price}}</p>
-<p>{{listing.description}}</p>
-<p>{{listing.category}}</p>
-<p>seller: {{listing.seller}}</p>
-<p>created on: {{listing.creation_date}}</p>
-<p>is active: {{listing.active}}</p>
-image: <img src="{{ listings.image.url }}"/>
+<img src="{{ listing.image.url }}"/>
+<br>
 
+<p>Listings Id: {{listing.id}}</p>
+<p>Title: {{listing.title}}</p>
+<p>Description: {{listing.description}}</p>
+<p>Category: {{listing.category}}</p>
+<p>Seller: {{listing.seller}}</p>
+<p>Created on: {{listing.creation_date}}</p>
+<p>Status: {{listing.active}}</p>
+<p>Price: {{listing.price}}</p>
+<p>Current Bid: {{bid_amount}}</p>
+<br>
 
-<a href="{% url 'index' %}">All Listings</a>
-   
+{% if is_authenticated %}
 
-<h4> Enter bid amount: </h4>
-<form action="{% url 'bid' listing %}" method="POST">
+<form action="{% url 'watchlist_change' listing_id  %}" method="POST">
     {% csrf_token %}
-    {{bid_form}}
-    <input class="btn btn-primary" type="submit" value="bid here">
+    {{watchlist_form}}
+    <input class="btn btn-primary" type="submit" value="Select">
 </form>
+<br>
 
-
-<h4> Add a comment: </h4>
-<form action="{% url 'bid' listing %}" method="POST">
+<form action="{% url 'comment' listing_id %}" method="POST">
     {% csrf_token %}
     {{comment_form}}
-    <input class="btn btn-primary" type="submit" value="comment">
+    <input class="btn btn-primary" type="submit" value="Comment">
 </form>
+<br>
 
+<form action="{% url 'bid' listing_id %}" method="POST">
+    {% csrf_token %}
+    {{bid_form}}
+    <input class="btn btn-primary" type="submit" value="Bid">
+</form>
+<br>
 
+Comments:
+{% for c in comments %}
+<li>{{c.user}}:  {{c.comment}}</li>
+{% endfor %}
+<br>
 
-{% if message %}
-    <div>{{ message }}</div>
+watchers:
+{% for wa in watchers %}
+<li>{{wa.username}}</li>
+{% endfor %}
+<br>
+
+{% for message in messages %}
+<li>{{ message }}</li>
+{% endfor %}
+<br>
+
+{% for b in bids %}
+<li>Highest Bid: {{b.bid_amount|safe}}</li>
+{% endfor %}
+<br>
+
+{% for w in winner %}
+<li>Current Winner {{w.user}}</li>
+{% endfor %}
+<br>
+
+{% for w in winner %}
+{% if you_are_winner == w.user %}
+YOU ARE THE WINNER
 {% endif %}
 
-{{bid_amount}}
- 
-<ul>
-    <li>listing bid{{listing.price}} </li>
-  
+{% endfor %}
 
-</ul>
+{% if seller %}
+You are the seller, Change listing
+<br>
 
+<form action="{% url 'edit' listing_id %}" method="POST" >
+    {% csrf_token %}
+    {{edit_form}}       
+    <input class="btn btn-primary" type="submit" value="edit">
+</form>
+<br>
+
+{% endif %}
+<br>
+
+{% endif %}
 
 {% endblock %}

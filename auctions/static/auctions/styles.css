@@ -2,5 +2,13 @@ body {
     padding: 10px;
 }
  img {
-     max-width: 200px !important;
+     max-width: 500px !important;
+ }
+
+ p {
+     color: 111820;
+ }
+
+ li {
+     color: 111820;
  }
