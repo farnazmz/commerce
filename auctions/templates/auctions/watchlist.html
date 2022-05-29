@@ -2,10 +2,18 @@
 
 {% block body %}
 {% for a in watchlists %}
-<ul>
-    <li><a href="{{a.listing.get_absolute_url}}">{{a.listing.title|safe}}</a></li>
-    <li>seller: {{a.listing.seller|safe}}</li>
-    <li>price: {{a.listing.price|safe}}</li>
+<ul class="demo">
+    <a style="padding-right: 10px;"  href="{{a.listing.get_absolute_url}}">
+        <li>
+            <div class="li-div">
+                <img  style="border: 1px solid #ddd; border-radius: 4px; padding: 5px; max-width: 4.5em; min-width: 2.5em;" src="{{ a.listing.image.url}}">
+            
+                <h3 style="text-transform: capitalize;">{{a.listing.title}}</h3>
+           
+            </div>
+    
+        </li>
+    </a>
 </ul>
  {% endfor %}
 

@@ -1,5 +1,6 @@
 from mailbox import Message
 from pyexpat.errors import messages
+from trace import Trace
 from typing import Any
 from django import *
 from ast import arg
@@ -35,13 +36,22 @@ from django.contrib import messages
 from django.template import Context, Template
 
 def index(request):  
-    listings = Listing.objects.all()
+    listings = Listing.objects.filter(active=True)
     for listing in listings:
-        return render(request, "auctions/index.html", {
-            "listing": listing,
-            "listings": listings
-        })  
-
+        listing_id = int(listing.id)
+        bids = Bid.objects.filter(listing=listing_id)
+        if bids:    
+            bid = [b.bid_amount for b in bids]
+            current_price = max(bid)
+            listing.price = float(current_price) 
+        else:
+            price = listing.price
+            return render(request, "auctions/index.html", {
+                    "listing": listing,
+                    "listings": listings,
+                    "price": price
+            })
+    
 def login_view(request):
     if request.method == "POST":
     # Attempt to sign user in
@@ -101,7 +111,7 @@ def category_page(request):
     form = CategoryForm(request.POST)      
     if form.is_valid():
         category_name = form.cleaned_data["category"]
-        listings = Listing.objects.filter(category=category_name)    
+        listings = Listing.objects.filter(category=category_name, active=True)    
         return render(request, "auctions/category_page.html", {
             "listings":listings,                                   
             "category_name":category_name,
@@ -123,9 +133,7 @@ def listings(request):
             price = form.cleaned_data["price"]
             description = form.cleaned_data["description"]
             image = form.cleaned_data["image"]
-            active =  form.cleaned_data["active"] 
-            
-                          
+            active =  form.cleaned_data["active"]      
             listing = Listing(
             seller=request.user,
             title=title,
@@ -204,7 +212,7 @@ def bid(request, listing_id):
                     user=request.user
                     )
                     b.save()           
-                    messages.warning(request, 'current winner is ')
+                    messages.warning(request, 'You are the current winner')
                     return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
                 else:
                     messages.warning(request, 'make a higher bid')
@@ -222,14 +230,11 @@ def bid(request, listing_id):
                 else:
                     messages.warning(request, 'make a higher bid')
                     return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
-
         else:
             return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
-
     else:
         return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
        
-
 login_required()
 def comment(request, listing_id):
     if request.method == "POST":
@@ -280,7 +285,6 @@ def edit(request, listing_id):
     else:
         return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
 
-
 login_required()
 def listings_view(request, listing_id):  
     listing_id = Listing.objects.get(pk=listing_id) 
@@ -310,7 +314,7 @@ def listings_view(request, listing_id):
             "in_watchlist":Watchlist.objects.filter(user=request.user, listing=listing_id),
             "is_authenticated":request.user.is_authenticated,
             "listing":listing_id,
-            "logged_in": request.user.is_authenticated,
+            "logged_in": Bid.objects.filter(listing=listing_id, bid_amount=bid_amount, user=request.user),
             "bid_amount":bid_amount,
             "comments":Comment.objects.filter(listing=listing_id),
             "comment":comment,
