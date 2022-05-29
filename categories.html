@@ -1,0 +1,14 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+<h4>Shop by Category</h4>
+<div style="padding-left: 0%;" class="li-div">
+<form action="{% url 'category_page' %}" method="post" >
+    {% csrf_token %}
+    {{form}}       
+    <input style="min-width:fit-content" class="btn-outline-primary" type="submit" value="Select">
+</form>
+</div>
+{% endblock %}
+   
