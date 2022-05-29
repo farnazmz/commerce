@@ -3,15 +3,15 @@
 {% block body %}
 
    
-<h2 style="text-transform: capitalize; padding-top: 10px;">{{category_name}}</h2>
+<h2 style="text-transform: capitalize; padding-top: 60px;">{{category_name}}</h2>
 
 {% for listing in listings %}
 
 <div>
 
     <img src="{{ listing.image.url }}"/> 
-    <ul class="demo">
-      <li><div class="li-div"><h1 style="text-transform: capitalize;"><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h1></div></li>
+    <ul class="demo" style="margin: 20px; padding: 10px;">
+      <li><div class="li-div"><h2><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h2></div></li>
 
       <li> <div class="li-div"><h5>Current Price: </h5><h6>${{ listing.price|floatformat:2}}</h6> </div></li>
 

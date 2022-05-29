@@ -2,12 +2,13 @@
 
 {% block body %}
 
-    <h4>Listing</h4>
-    <div style="padding-left: 0%;" class="li-div">
-    <form action="{% url 'listings' %}" method="POST" enctype="multipart/form-data">
+    <br>
+    <div  class="li-div">
+    <form style=" width: fit-content; margin: 20px; padding: 20px; border-radius: 15px; border-color: #bfedfa80;" action="{% url 'listings' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{form}}       
-        <input class="btn-primary" type="submit" value="submit">
+    
+        <input class="btn-outline-primary" type="submit" value="Submit">
     </form>
 
 </div>
