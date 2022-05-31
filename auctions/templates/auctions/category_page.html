@@ -1,6 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+<<<<<<< HEAD
    
 <h2 style="text-transform: capitalize; padding-top: 60px;">{{category_name}}</h2>
 
@@ -26,4 +27,26 @@
 
 {% endfor %}
 
+=======
+
+<h3>{{category_name|safe}}</h3>
+
+{% for listing in listings %}
+<ul>
+    <h1><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h1>
+    <li><a href="{% url 'category_page'  %}"> Title: {{listing.title|safe}} </a></li>
+    <li><a href="{% url 'category_page'  %}"> Image:<img src="{{ listing.image.url }}"/></a></li>
+    <li><a href="{% url 'category_page'  %}"> Price: {{listing.price|safe}} </a></li>
+    <li><a href="{% url 'category_page'  %}"> Description: {{listing.description|safe}} </a></li>
+    <li><a href="{% url 'category_page'  %}"> Category: {{listing.category|safe}}</a></li>
+    <li><a href="{% url 'category_page'  %}"> Seller: {{listing.seller|safe}} </a></li>
+    <li><a href="{% url 'category_page'  %}"> Creation Date: {{listing.creation_date|safe}}</a></li>
+    <li><a href="{% url 'category_page'  %}"> Status Active: {{listing.active|safe}} </a></li>
+</ul>
+
+{% endfor %}
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
 {% endblock %}

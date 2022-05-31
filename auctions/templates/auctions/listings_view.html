@@ -2,6 +2,7 @@
 
 {% block body %}
 
+<<<<<<< HEAD
 <div >
     <ul  style="padding-left: 0px;">
         <img style="max-width: 35em;" src="{{ listing.image.url }}"/>
@@ -33,6 +34,22 @@
 
 </div>
 
+=======
+<img src="{{ listing.image.url }}"/>
+<br>
+
+<p>Listings Id: {{listing.id}}</p>
+<p>Title: {{listing.title}}</p>
+<p>Description: {{listing.description}}</p>
+<p>Category: {{listing.category}}</p>
+<p>Seller: {{listing.seller}}</p>
+<p>Created on: {{listing.creation_date}}</p>
+<p>Status: {{listing.active}}</p>
+<p>Price: {{listing.price}}</p>
+<p>Current Bid: {{bid_amount}}</p>
+<br>
+
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
 {% if is_authenticated %}
 
 <div style="padding-top: 0px;">
@@ -51,12 +68,21 @@
                 <li style="text-transform: capitalize; text-overflow:ellipsis; text-align: left;">{{c.user}}: {{ c.comment}}</li>
                 {% endfor %}
 
+<<<<<<< HEAD
             </ul>
         </div>
+=======
+Comments:
+{% for c in comments %}
+<li>{{c.user}}:  {{c.comment}}</li>
+{% endfor %}
+<br>
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
 
         <div>
             <ul style="padding: 0px; padding-top: 7px;">
 
+<<<<<<< HEAD
                 <form action="{% url 'bid' listing_id %}" method="POST" class="zoom">
                     {% csrf_token %}
                     {{bid_form}}
@@ -84,12 +110,39 @@
     </ul>
 </div>
 {% if seller %}
+=======
+{% for message in messages %}
+<li>{{ message }}</li>
+{% endfor %}
+<br>
+
+{% for b in bids %}
+<li>Highest Bid: {{b.bid_amount|safe}}</li>
+{% endfor %}
+<br>
+
+{% for w in winner %}
+<li>Current Winner {{w.user}}</li>
+{% endfor %}
+<br>
+
+{% for w in winner %}
+{% if you_are_winner == w.user %}
+YOU ARE THE WINNER
+{% endif %}
+
+{% endfor %}
+
+{% if seller %}
+You are the seller, Change listing
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
 <br>
 <form action="{% url 'edit' listing_id %}" method="POST" >
     {% csrf_token %}
     {{edit_form}}       
     <input style="background-color: rgba(236, 37, 77, 0.221); border-color: transparent; border-radius: 5px;" class="btn-btn-primary" type="submit" value="Seller! Click to End the Auction">
 </form>
+<<<<<<< HEAD
 
 {% endif %}
 
@@ -103,4 +156,13 @@
 
 {% endif %}
 
+=======
+<br>
+
+{% endif %}
+<br>
+
+{% endif %}
+
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
 {% endblock %}

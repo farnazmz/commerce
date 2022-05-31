@@ -46,7 +46,11 @@ class Listing(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing")
     category = models.CharField(max_length=50, choices=CATEGORIES)
     active = models.BooleanField() 
+<<<<<<< HEAD
     
+=======
+     
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
     def __str__(self):
         return f"{self.id}"
     
@@ -61,8 +65,13 @@ class Watchlist(models.Model):
 
     def __str__(self):
         return f"{self.listing}"
+<<<<<<< HEAD
         
   
+=======
+
+
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE) 
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE) 

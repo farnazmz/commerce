@@ -2,6 +2,7 @@
 
 {% block body %}
 
+<<<<<<< HEAD
     {% if message %}
         <div>{{ message }}</div>
     {% endif %}
@@ -17,6 +18,8 @@
         <li>{{active|safe}}</li>
     </ul>
 
+=======
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
     <form action="{% url 'edit' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{edit_form}}       

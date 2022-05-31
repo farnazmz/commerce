@@ -3,6 +3,7 @@ html {
     max-width: 100% !important;
     margin: 30px !important;
 }
+<<<<<<< HEAD
 
 body {
     padding-left: 70px;
@@ -204,3 +205,16 @@ li {
    }
 }
 
+=======
+ img {
+     max-width: 500px !important;
+ }
+
+ p {
+     color: 111820;
+ }
+
+ li {
+     color: 111820;
+ }
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
