@@ -2,28 +2,28 @@
 
 {% block body %}
 
-  
-
+<<<<<<< HEAD
     {% if message %}
         <div>{{ message }}</div>
     {% endif %}
 
     <ul>
-   
-    <li>{{title|safe}}</li>
-    <li>{{image|safe}}</li>
-    <li>{{price|safe}}</li>
-    <li>{{description|safe}}</li>
-    <li>{{category|safe}}</li>
-    <li>{{seller|safe}}</li>
-    <li>{{creation_date|safe}}</li>
-    <li>{{active|safe}}</li>
+        <li>{{title|safe}}</li>
+        <li>{{image|safe}}</li>
+        <li>{{price|safe}}</li>
+        <li>{{description|safe}}</li>
+        <li>{{category|safe}}</li>
+        <li>{{seller|safe}}</li>
+        <li>{{creation_date|safe}}</li>
+        <li>{{active|safe}}</li>
     </ul>
+
+=======
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
     <form action="{% url 'edit' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{edit_form}}       
         <input class="btn btn-primary" type="submit" value="submit">
     </form>
-
    
 {% endblock %}

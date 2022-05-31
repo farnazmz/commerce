@@ -9,6 +9,7 @@
     <img src="{{ listing.image.url }}"/> 
     
     <ul class="demo" style="margin: 20px; padding: 10px;">
+      
       <li><div class="li-div"><h2><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h2></div></li>
 
       <li> <div class="li-div"><h5>Current Price: </h5><h6>${{ listing.price|floatformat:2}}</h6> </div></li>
@@ -17,9 +18,30 @@
 
       <li> <div class="li-div"><h5>Date Posted: </h5><h6>{{ listing.creation_date }}</h6></div></li>
    
+<<<<<<< HEAD
     </ul>
     
 </div>
+=======
+    {% for listing in listings %}
+  <ul>
+
+    <h1><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h1>
+
+    <li>Listing Id: {{ listing.id }}</li>
+    <li>Title: {{ listing.title|safe }}</li>
+    <li><img src="{{ listing.image.url }}"/></li>
+    <li>Price: {{ listing.price }}</li>
+    <li>Description: {{ listing.description }}</a></li>
+    <li>Category: {{ listing.category }}</a></li>
+    <li>Seller: {{ listing.seller|safe }}</a></li>
+    <li>Date: {{ listing.creation_date }}</li>
+    <li>Status: {{ listing.active }}</a></li>
+
+</ul>
+    {% endfor %}
+    <a href="listings">List Here</a>
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
 
 {% endfor %}
 

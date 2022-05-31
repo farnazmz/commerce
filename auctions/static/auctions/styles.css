@@ -3,6 +3,7 @@ html {
     max-width: 100% !important;
     margin: 30px !important;
 }
+<<<<<<< HEAD
 
 body {
     padding-left: 70px;
@@ -75,10 +76,11 @@ strong {
  
 img {
     max-width: 60%;
+    max-height: 60%;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 50px;
     border-radius: 20px;
-    margin: 20px;
+    margin: 30px;
 }
 
 img:hover {
@@ -130,7 +132,7 @@ a {
     color:#0c2d7cdc;
 }
 
-#id_description:hover, #id_title:hover,  #id_category:hover, #id_price:hover, #id_image:hover, .zoom:hover, #id_active:hover {
+#id_description:hover, #id_title:hover,  #id_category:hover, #id_price:hover, #id_image:hover, .zoom:hover {
     outline-color: #c1f6c9;
     outline-width:thick;
     outline-style:inset;
@@ -195,11 +197,24 @@ li {
    
    @keyframes glow {
      from {
-    text-shadow: 10px 10px 5px #fff, 10px 10px 5px #c1f6c93b, 10px 10px 10px #c1f6c96c, 10px 10px 10px #c1f6c9c1, 10px 10px 15px #c1f6c9b1, 10px 10px 15px #c1f6c967, 10px 10px 20px #d4fbd528, 10px 10px 20px #f6f8d724;
+    text-shadow: 10px 10px 10px #fff, 10px 10px 10px #c1f6c93b, 10px 10px 10px #c1f6c96c, 10px 10px 10px #c1f6c9c1, 10px 10px 10px #c1f6c9b1, 10px 10px 10px #c1f6c967, 10px 10px 10px #d4fbd528, 10px 10px 10px #f6f8d724;
    }
    
    to {
-    text-shadow: 10px 15px 5px #fff, 10px 15px 5px #f7f0b081, 10px 15px 10px #f7f0b0ce, 10px 15px 10px #f7f0b0, 10px 15px 15px #f7f0b09f, 10px 15px 15px #f7f0b04a, 10px 15px 25px #e9ffef93;
+    text-shadow: 10px 10px 10px #fff, 10px 10px 10px #f7f0b081, 10px 10px 10px #f7f0b0ce, 10px 10px 10px #f7f0b0, 10px 10px 10px #f7f0b09f, 10px 10px 10px #f7f0b04a, 10px 10px 10px #e9ffef93;
    }
 }
-   
+
+=======
+ img {
+     max-width: 500px !important;
+ }
+
+ p {
+     color: 111820;
+ }
+
+ li {
+     color: 111820;
+ }
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c

@@ -2,22 +2,25 @@
 
 {% block body %}
 
+<<<<<<< HEAD
 <div >
     <ul  style="padding-left: 0px;">
         <img style="max-width: 35em;" src="{{ listing.image.url }}"/>
 
         <li>
             <div class="li-div">
-            <form action="{% url 'watchlist_change' listing_id  %}" method="POST" class="zoom" style="padding-left: 3px; border-radius:5px;">
-                {% csrf_token %}
-                {{watchlist_form}}
-                <input style="text-transform: capitalize; color: #0c2d7cdc;" class="btn-outline-primary" type="submit" value="{{ listing.title }}">
-            </form> 
+                <form action="{% url 'watchlist_change' listing_id  %}" method="POST" class="zoom" style="padding-left: 3px; border-radius:5px;">
+                    {% csrf_token %}
+                    {{watchlist_form}}
+                    <input style="text-transform: capitalize; color: #0c2d7cdc;" class="btn-outline-primary" type="submit" value="{{ listing.title }}">
+                </form> 
             </div>  
         </li>
+
     </ul>
 
     <ul style="padding: 20px; margin: 30px;" class="demo">
+
         <li><div style="padding-top: 2px;" class="li-div"><h5>Highest Bid: </h5><h6>${{ bid_amount|floatformat:2}}</h6> </div></li>
         <li><div style="padding-top: 2px;" class="li-div"><h5>Original Price: </h5><h6>${{ listing.price|floatformat:2}}</h6> </div></li>
         <li><div style="padding-top: 2px;" class="li-div"><h5>Description: </h5><h6>{{ listing.description }}</h6></div> </li>
@@ -25,15 +28,36 @@
         <li><div style="padding-top: 2px;" class="li-div"><h5>Seller: </h5><h6>{{ listing.seller }}</h6></div></li>
         <li><div style="padding-top: 2px;" class="li-div"><h5>Date Posted: </h5><h6>{{ listing.creation_date }}</h6></div></li>
         <li><div style="padding-top: 2px;" class="li-div"><h5>Auction Active: </h5><h6>{{ listing.active }}</h6></div></li>
-        <br>
-        
+        <br> 
+
     </ul>
+
 </div>
+
+=======
+<img src="{{ listing.image.url }}"/>
+<br>
+
+<p>Listings Id: {{listing.id}}</p>
+<p>Title: {{listing.title}}</p>
+<p>Description: {{listing.description}}</p>
+<p>Category: {{listing.category}}</p>
+<p>Seller: {{listing.seller}}</p>
+<p>Created on: {{listing.creation_date}}</p>
+<p>Status: {{listing.active}}</p>
+<p>Price: {{listing.price}}</p>
+<p>Current Bid: {{bid_amount}}</p>
+<br>
+
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
 {% if is_authenticated %}
+
 <div style="padding-top: 0px;">
     <ul style="padding-left:20px;"  class="demo1">  
+
         <div>
             <ul style="padding: 0px;">   
+
                 <form action="{% url 'comment' listing_id %}" method="POST" class="zoom">
                     {% csrf_token %}
                     {{comment_form}}
@@ -43,10 +67,22 @@
                 {% for c in comments %}
                 <li style="text-transform: capitalize; text-overflow:ellipsis; text-align: left;">{{c.user}}: {{ c.comment}}</li>
                 {% endfor %}
+
+<<<<<<< HEAD
             </ul>
         </div>
+=======
+Comments:
+{% for c in comments %}
+<li>{{c.user}}:  {{c.comment}}</li>
+{% endfor %}
+<br>
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
+
         <div>
             <ul style="padding: 0px; padding-top: 7px;">
+
+<<<<<<< HEAD
                 <form action="{% url 'bid' listing_id %}" method="POST" class="zoom">
                     {% csrf_token %}
                     {{bid_form}}
@@ -59,24 +95,54 @@
                 {% endfor %}
             </ul>
         </div>
+
         <div style="border-bottom-style: none;">
             <ul style="padding: 0px;">
-              
+
                 <p style="text-align: left; font-weight: bold;">Who is Watching?</p>
                 {% for wa in watchers %}
                 <li style="text-transform: capitalize; text-align: left;">{{wa.username}}</li>
                 {% endfor %}
+
             </ul>
         </div>
+        
     </ul>
 </div>
 {% if seller %}
+=======
+{% for message in messages %}
+<li>{{ message }}</li>
+{% endfor %}
+<br>
+
+{% for b in bids %}
+<li>Highest Bid: {{b.bid_amount|safe}}</li>
+{% endfor %}
+<br>
+
+{% for w in winner %}
+<li>Current Winner {{w.user}}</li>
+{% endfor %}
+<br>
+
+{% for w in winner %}
+{% if you_are_winner == w.user %}
+YOU ARE THE WINNER
+{% endif %}
+
+{% endfor %}
+
+{% if seller %}
+You are the seller, Change listing
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
 <br>
 <form action="{% url 'edit' listing_id %}" method="POST" >
     {% csrf_token %}
     {{edit_form}}       
     <input style="background-color: rgba(236, 37, 77, 0.221); border-color: transparent; border-radius: 5px;" class="btn-btn-primary" type="submit" value="Seller! Click to End the Auction">
 </form>
+<<<<<<< HEAD
 
 {% endif %}
 
@@ -90,4 +156,13 @@
 
 {% endif %}
 
+=======
+<br>
+
+{% endif %}
+<br>
+
+{% endif %}
+
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
 {% endblock %}

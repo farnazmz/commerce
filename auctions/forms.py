@@ -16,11 +16,7 @@ from django.forms import BooleanField, ChoiceField, ModelForm, NullBooleanSelect
 from sqlalchemy import true, false, null
 from .models import Watchlist, Bid, Comment, User, Listing
 
-
 class ListingForm(forms.Form):
-
-    
-
     title = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Title"}))
     price = forms.FloatField(label="", widget=forms.NumberInput(attrs={"PlaceHolder":"Price"}))
     description = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Description"}))  
@@ -38,10 +34,10 @@ class ListingForm(forms.Form):
     ('pet supplies', 'Pet Supplies'),
     ('sports', 'Sports')
     ] 
+
     category = forms.CharField(label="", widget=forms.Select(choices=CATEGORIES))
     image = forms.ImageField(label="")
-    active = forms.NullBooleanField(required=False, label="", widget=forms.Select(choices=[('true', 'Active'), ('false', 'Not Active')]))
-
+    active = forms.NullBooleanField(required=False, label="switch", widget=forms.Select(choices=[('true', 'Active'), ('false', 'Not Active')]))
 
 class CategoryForm(forms.Form):
     CATEGORIES= [
@@ -59,17 +55,15 @@ class CategoryForm(forms.Form):
     ] 
     category = forms.CharField(label="", widget=forms.Select(choices=CATEGORIES))
 
+
 class WatchlistForm(forms.Form):
     change_view = forms.NullBooleanField(required=False, label="", widget=forms.Select(choices=[('true', 'Add to Watchlist'), ('false', 'Remove from Watchlist')]))
     
-
 class BidForm(forms.Form):
     bid_amount = forms.FloatField(label="", widget=forms.NumberInput(attrs={"PlaceHolder":"Bid"}), required=False)
-
 
 class CommentForm(forms.Form):
     comment = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Comment"}), required=False)
     
-
 class EditForm(forms.Form):
     active = forms.NullBooleanField(required=False, label="", widget=forms.Select(choices=[('true', 'Active'), ('false', 'Not Active')]))
