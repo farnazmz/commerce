@@ -1,8 +1,28 @@
 {% extends "auctions/layout.html" %}
 {% load static %}
 {% block body %}
-    <h2>Active Listings</h2>
+
+  {% for listing in listings %}
+
+  <div>
+
+    <img src="{{ listing.image.url }}"/> 
+    
+    <ul class="demo" style="margin: 20px; padding: 10px;">
+      
+      <li><div class="li-div"><h2><a href="{{listing.get_absolute_url}}">{{listing.title}}</a></h2></div></li>
+
+      <li> <div class="li-div"><h5>Current Price: </h5><h6>${{ listing.price|floatformat:2}}</h6> </div></li>
+
+      <li> <div class="li-div"><h5>Description: </h5><h6>{{ listing.description }}</h6></div></li>
+
+      <li> <div class="li-div"><h5>Date Posted: </h5><h6>{{ listing.creation_date }}</h6></div></li>
    
+<<<<<<< HEAD
+    </ul>
+    
+</div>
+=======
     {% for listing in listings %}
   <ul>
 
@@ -21,5 +41,8 @@
 </ul>
     {% endfor %}
     <a href="listings">List Here</a>
+>>>>>>> 1fe2dc96e6236ac945d05bc8438c60297a24367c
+
+{% endfor %}
 
 {% endblock %}

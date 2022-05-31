@@ -3,11 +3,20 @@
 {% block body %}
 
 {% for a in watchlists %}
-<ul>
-    <li><a href="{{a.listing.get_absolute_url}}">{{a.listing.title|safe}}</a></li>
-    <li>seller: {{a.listing.seller|safe}}</li>
-    <li>price: {{a.listing.price|safe}}</li>
+
+<ul class="demo center" style="padding-bottom: 15px;">
+
+    <a style="padding-right: 10px; text-align: center;"  href="{{a.listing.get_absolute_url}}">
+        <li class="liw">
+            <div class="li-div" style="padding: 20px;">
+                <img  style="border: 1px solid #ddd; border-radius: 15px; padding: 5px; max-width: 7.5em; min-width: 4.5em; margin-right: 25px;" src="{{ a.listing.image.url}}">
+                <h3 >{{a.listing.title}}</h3>
+            </div>
+        </li>
+    </a>
+    
 </ul>
+
  {% endfor %}
 
  {% for message in messages %}

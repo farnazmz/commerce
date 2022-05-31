@@ -18,9 +18,9 @@ from .models import Watchlist, Bid, Comment, User, Listing
 
 class ListingForm(forms.Form):
     title = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Title"}))
-    image = forms.ImageField(max_length=200)
-    price = forms.FloatField(label="", widget=forms.NumberInput())
+    price = forms.FloatField(label="", widget=forms.NumberInput(attrs={"PlaceHolder":"Price"}))
     description = forms.CharField(label="", widget=forms.TextInput(attrs={"PlaceHolder":"Description"}))  
+    
     CATEGORIES= [
     ('clothing, shoes', 'Clothing, Shoes'),
     ('jewelry, watches', 'Jewelry, Watches'),
@@ -34,8 +34,10 @@ class ListingForm(forms.Form):
     ('pet supplies', 'Pet Supplies'),
     ('sports', 'Sports')
     ] 
+
     category = forms.CharField(label="", widget=forms.Select(choices=CATEGORIES))
-    active = forms.NullBooleanField(required=False, label="", widget=forms.Select(choices=[('true', 'Active'), ('false', 'Not Active')]))
+    image = forms.ImageField(label="")
+    active = forms.NullBooleanField(required=False, label="switch", widget=forms.Select(choices=[('true', 'Active'), ('false', 'Not Active')]))
 
 class CategoryForm(forms.Form):
     CATEGORIES= [
@@ -52,7 +54,7 @@ class CategoryForm(forms.Form):
     ('sports', 'Sports')
     ] 
     category = forms.CharField(label="", widget=forms.Select(choices=CATEGORIES))
-    active = forms.BooleanField(required=False)
+
 
 class WatchlistForm(forms.Form):
     change_view = forms.NullBooleanField(required=False, label="", widget=forms.Select(choices=[('true', 'Add to Watchlist'), ('false', 'Remove from Watchlist')]))
