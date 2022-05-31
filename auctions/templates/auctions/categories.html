@@ -1,14 +1,16 @@
 {% extends "auctions/layout.html" %}
 
-{% block body %}
-    
+{% block body %}    
 
 <div style="padding: 15px; padding-top: 70px;" class="li-div">
-<form action="{% url 'category_page' %}" method="post" class="zoom2" >
-    {% csrf_token %}
-    {{form}}       
-    <input style="min-width:fit-content" class="btn-outline-primary" type="submit" value="Select">
-</form>
+
+    <form action="{% url 'category_page' %}" method="post" class="zoom2" >
+        {% csrf_token %}
+        {{form}}       
+        <input style="min-width:fit-content" class="btn-outline-primary" type="submit" value="Select">
+    </form>
+
 </div>
+
 {% endblock %}
    

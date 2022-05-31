@@ -8,16 +8,18 @@
 
         <li>
             <div class="li-div">
-            <form action="{% url 'watchlist_change' listing_id  %}" method="POST" class="zoom" style="padding-left: 3px; border-radius:5px;">
-                {% csrf_token %}
-                {{watchlist_form}}
-                <input style="text-transform: capitalize; color: #0c2d7cdc;" class="btn-outline-primary" type="submit" value="{{ listing.title }}">
-            </form> 
+                <form action="{% url 'watchlist_change' listing_id  %}" method="POST" class="zoom" style="padding-left: 3px; border-radius:5px;">
+                    {% csrf_token %}
+                    {{watchlist_form}}
+                    <input style="text-transform: capitalize; color: #0c2d7cdc;" class="btn-outline-primary" type="submit" value="{{ listing.title }}">
+                </form> 
             </div>  
         </li>
+
     </ul>
 
     <ul style="padding: 20px; margin: 30px;" class="demo">
+
         <li><div style="padding-top: 2px;" class="li-div"><h5>Highest Bid: </h5><h6>${{ bid_amount|floatformat:2}}</h6> </div></li>
         <li><div style="padding-top: 2px;" class="li-div"><h5>Original Price: </h5><h6>${{ listing.price|floatformat:2}}</h6> </div></li>
         <li><div style="padding-top: 2px;" class="li-div"><h5>Description: </h5><h6>{{ listing.description }}</h6></div> </li>
@@ -25,15 +27,20 @@
         <li><div style="padding-top: 2px;" class="li-div"><h5>Seller: </h5><h6>{{ listing.seller }}</h6></div></li>
         <li><div style="padding-top: 2px;" class="li-div"><h5>Date Posted: </h5><h6>{{ listing.creation_date }}</h6></div></li>
         <li><div style="padding-top: 2px;" class="li-div"><h5>Auction Active: </h5><h6>{{ listing.active }}</h6></div></li>
-        <br>
-        
+        <br> 
+
     </ul>
+
 </div>
+
 {% if is_authenticated %}
+
 <div style="padding-top: 0px;">
     <ul style="padding-left:20px;"  class="demo1">  
+
         <div>
             <ul style="padding: 0px;">   
+
                 <form action="{% url 'comment' listing_id %}" method="POST" class="zoom">
                     {% csrf_token %}
                     {{comment_form}}
@@ -43,10 +50,13 @@
                 {% for c in comments %}
                 <li style="text-transform: capitalize; text-overflow:ellipsis; text-align: left;">{{c.user}}: {{ c.comment}}</li>
                 {% endfor %}
+
             </ul>
         </div>
+
         <div>
             <ul style="padding: 0px; padding-top: 7px;">
+
                 <form action="{% url 'bid' listing_id %}" method="POST" class="zoom">
                     {% csrf_token %}
                     {{bid_form}}
@@ -59,15 +69,18 @@
                 {% endfor %}
             </ul>
         </div>
+
         <div style="border-bottom-style: none;">
             <ul style="padding: 0px;">
-              
+
                 <p style="text-align: left; font-weight: bold;">Who is Watching?</p>
                 {% for wa in watchers %}
                 <li style="text-transform: capitalize; text-align: left;">{{wa.username}}</li>
                 {% endfor %}
+
             </ul>
         </div>
+        
     </ul>
 </div>
 {% if seller %}

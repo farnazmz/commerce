@@ -35,15 +35,19 @@ from django.template import loader
 from django.contrib import messages
 from django.template import Context, Template
 
+
+# homepage with a list of all listings and their basic information
 def index(request):  
     listings = Listing.objects.filter(active=True)
     for listing in listings:
         listing_id = int(listing.id)
         bids = Bid.objects.filter(listing=listing_id)
+        # price will be set on the highest existing bid
         if bids:    
             bid = [b.bid_amount for b in bids]
             current_price = max(bid)
             listing.price = float(current_price) 
+        # if no bids, price will be set as the original listing price
         else:
             price = listing.price
             return render(request, "auctions/index.html", {
@@ -51,7 +55,8 @@ def index(request):
                     "listings": listings,
                     "price": price
             })
-    
+
+  
 def login_view(request):
     if request.method == "POST":
     # Attempt to sign user in
@@ -69,9 +74,11 @@ def login_view(request):
     else:
         return render(request, "auctions/login.html")
 
+
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
+
 
 def register(request):
     if request.method == "POST":
@@ -97,8 +104,10 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
 login_required()
 def categories(request):   
+    # Ask for any specific gategory 
     if request.method == "GET":
         return render(request, "auctions/categories.html", {                      
             "form":CategoryForm(),     
@@ -106,8 +115,10 @@ def categories(request):
     else:
         return render(request, "auctions/category_page.html")
 
+
 login_required()
 def category_page(request):
+    # render a list of all listings in that specific category
     form = CategoryForm(request.POST)      
     if form.is_valid():
         category_name = form.cleaned_data["category"]
@@ -123,8 +134,10 @@ def category_page(request):
             "bid_form":BidForm()  
         })     
 
+
 login_required()
 def listings(request):
+    # Attempt to get information in order to post a new listing
     if request.method == "POST":
         form = ListingForm(request.POST, request.FILES)
         if form.is_valid():
@@ -155,20 +168,24 @@ def listings(request):
             "form":ListingForm()
         })
 
+
 login_required()
 def watchlist_change(request, listing_id): 
+    # Add items to watchlist page
     if request.method == "POST":
         watchlist_form = WatchlistForm(request.POST)
         if watchlist_form.is_valid():
             change_view =  watchlist_form.cleaned_data["change_view"]
             listing_id = Listing.objects.get(id=listing_id)
             watchlistitems = Watchlist.objects.filter(user=request.user, listing=listing_id)
+            # add to the page or error message if trying to add an existing item to watchlist 
             if watchlistitems:
                 if not change_view:
                     Watchlist.objects.filter(user=request.user, listing=listing_id).delete()
                 else:
                     messages.warning(request, 'Already on watchlist')
             else:
+                # error message if item is not in the watchlist to be removed
                 if change_view:
                     w = Watchlist(user=request.user, listing=listing_id)
                     w.save()
@@ -181,8 +198,10 @@ def watchlist_change(request, listing_id):
     else:
         return HttpResponseRedirect(reverse("watchlist"))
 
+
 login_required()
 def watchlist(request):
+    # personalized page for all listings of interest being watched
     listing_id = Listing.objects.all()
     return render(request, "auctions/watchlist.html", {  
         "user":request.user,   
@@ -190,7 +209,9 @@ def watchlist(request):
         "listing_id":listing_id,                                        
         })
 
+
 login_required()
+# Attempt to get a higher bid or else an error message
 def bid(request, listing_id):
     if request.method == "POST":
         bid_form = BidForm(request.POST)
@@ -211,7 +232,8 @@ def bid(request, listing_id):
                     bid_amount = bid_amount, 
                     user=request.user
                     )
-                    b.save()           
+                    b.save()  
+                    # personal message for the highest bidder as the current winner         
                     messages.warning(request, 'You are the current winner')
                     return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
                 else:
@@ -234,8 +256,10 @@ def bid(request, listing_id):
             return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
     else:
         return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
-       
+
+
 login_required()
+# diplaying comments on each listing page
 def comment(request, listing_id):
     if request.method == "POST":
         listing_id = Listing.objects.get(id=listing_id)
@@ -254,7 +278,9 @@ def comment(request, listing_id):
     else:
         return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
 
+
 login_required()
+# allows the seller to close the auction and set the highest bidder as the final winner
 def edit(request, listing_id):
     listing_id = Listing.objects.get(pk=listing_id)
     if request.method == "POST":
@@ -270,22 +296,22 @@ def edit(request, listing_id):
                     bids = Bid.objects.filter(listing=listing_id)
                     if bids:
                         "bids" == bids
-                        messages.warning(request, 'auction closed, winner is:')
+                        messages.warning(request, 'auction closed')
                         return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
                     else:
                         messages.warning(request, 'auction closed, no winner')
                         return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
-
                 return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
             else:
                 return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
-
         else:
             return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
     else:
         return HttpResponseRedirect(reverse("listings_view", kwargs={"listing_id":listing_id}))
 
+
 login_required()
+# All details of a listing will be shown as well as bid, comments, watchers
 def listings_view(request, listing_id):  
     listing_id = Listing.objects.get(pk=listing_id) 
     bids = Bid.objects.filter(listing=listing_id)
@@ -319,16 +345,12 @@ def listings_view(request, listing_id):
             "comments":Comment.objects.filter(listing=listing_id),
             "comment":comment,
             "watchers":watchers,
-            "winner":Bid.objects.filter(listing=listing_id, bid_amount=bid_amount)
-            
-                   
-           
+            "winner":Bid.objects.filter(listing=listing_id, bid_amount=bid_amount)                     
             }) 
     else:            
         return render(request,"auctions/listings_view.html", { 
             "is_authenticated":request.user.is_authenticated,
             "listing":listing_id,
-            "in_wachlist":false,
-        
+            "in_wachlist":false,        
             }) 
     
